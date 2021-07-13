@@ -28,28 +28,39 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="@string/title_home"
+                    android:text="@string/title_search"
                     android:textColor="@color/black"
                     android:textSize="18dp" />
             </com.google.android.material.appbar.MaterialToolbar>
         </com.google.android.material.appbar.AppBarLayout>
 
-        <TextView
-            android:id="@+id/tv_best_seller_title"
+        <EditText
+            android:id="@+id/et_book_search_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/best_seller"
-            android:textSize="18dp"
-            android:textColor="@color/black"
-            android:textStyle="bold"
-            android:gravity="center"
-            android:padding="10dp"
-            android:layout_marginBottom="3dp"
-            android:background="@color/title"
+            android:text="@={viewmodel.searchKeyword}"
+            android:inputType="text"
+            android:maxLines="1"
+            android:imeOptions="actionSearch"
+            android:layout_margin="10dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/ly_toolbar"
+            app:layout_constraintEnd_toStartOf="@id/btn_book_search"
             app:layout_constraintBottom_toTopOf="@id/sl_swipe_refresh"/>
+
+        <Button
+            android:id="@+id/btn_book_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="@string/title_search"
+            android:textAllCaps="false"
+            android:background="@color/white"
+            app:layout_constraintTop_toTopOf="@id/et_book_search_title"
+            app:layout_constraintStart_toEndOf="@id/et_book_search_title"
+            app:layout_constraintBottom_toBottomOf="@+id/et_book_search_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:onClick="@{() -> viewmodel.getSearchBooks(viewmodel.searchKeyword)}"/>
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/sl_swipe_refresh"
@@ -57,12 +68,12 @@
             android:layout_height="0dp"
             android:layout_margin="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_best_seller_title"
+            app:layout_constraintTop_toBottomOf="@id/et_book_search_title"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_book_list"
+                android:id="@+id/rv_book_search_list"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:orientation="vertical"

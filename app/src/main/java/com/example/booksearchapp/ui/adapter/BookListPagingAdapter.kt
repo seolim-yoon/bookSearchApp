@@ -5,22 +5,28 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.example.booksearchapp.R
+import com.example.booksearchapp.data.database.model.BaseModel
+import com.example.booksearchapp.data.database.model.BestSellerModel
+import com.example.booksearchapp.data.database.model.SearchModel
 import com.example.booksearchapp.databinding.ItemBookListBinding
-import com.example.booksearchapp.ui.model.BaseModel
-import com.example.booksearchapp.ui.model.BestSellerModel
+import com.example.booksearchapp.databinding.ItemBookSearchListBinding
 
 class BookListPagingAdapter(
-    private var bookItemClick: (BestSellerModel) -> Unit
-) : PagingDataAdapter<BestSellerModel, BookListPagingAdapter.PagingItemViewHolder>(diffCallback){
+    private var bookItemClick: (BaseModel) -> Unit
+) : PagingDataAdapter<BaseModel, RecyclerView.ViewHolder>(diffCallback){
+    private val VIEW_TYPE_BEST_SELLER = 0
+    private val VIEW_TYPE_SEARCH = 1
+
     companion object {
-        val diffCallback = object : DiffUtil.ItemCallback<BestSellerModel>() {
-            override fun areItemsTheSame(oldItem: BestSellerModel, newItem: BestSellerModel): Boolean {
+        val diffCallback = object : DiffUtil.ItemCallback<BaseModel>() {
+            override fun areItemsTheSame(oldItem: BaseModel, newItem: BaseModel): Boolean {
                 return oldItem == newItem
             }
 
-            override fun areContentsTheSame(oldItem: BestSellerModel, newItem: BestSellerModel): Boolean {
+            override fun areContentsTheSame(oldItem: BaseModel, newItem: BaseModel): Boolean {
                 return if(oldItem is BestSellerModel && newItem is BestSellerModel) {
+                    oldItem.itemId == newItem.itemId
+                } else if(oldItem is SearchModel && newItem is SearchModel) {
                     oldItem.itemId == newItem.itemId
                 } else{
                     oldItem == newItem
@@ -29,26 +35,58 @@ class BookListPagingAdapter(
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BookListPagingAdapter.PagingItemViewHolder = PagingItemViewHolder(parent)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
+            when(viewType) {
+                VIEW_TYPE_BEST_SELLER -> {
+                    val layoutInflater = LayoutInflater.from(parent.context)
+                    val binding = ItemBookListBinding.inflate(layoutInflater, parent, false)
+                    BestSellerPagingItemViewHolder(binding)
+                }
+                VIEW_TYPE_SEARCH -> {
+                    val layoutInflater = LayoutInflater.from(parent.context)
+                    val binding = ItemBookSearchListBinding.inflate(layoutInflater, parent, false)
+                    SearchPagingItemViewHolder(binding)
+                }
+                else -> {
+                    val layoutInflater = LayoutInflater.from(parent.context)
+                    val binding = ItemBookListBinding.inflate(layoutInflater, parent, false)
+                    BestSellerPagingItemViewHolder(binding)
+                }
+            }
 
-    override fun onBindViewHolder(holder: BookListPagingAdapter.PagingItemViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when(holder) {
-            is PagingItemViewHolder -> holder.bind(getItem(position) as BestSellerModel)
+            is BestSellerPagingItemViewHolder -> holder.bind(getItem(position) as BestSellerModel)
+            is SearchPagingItemViewHolder -> holder.bind(getItem(position) as SearchModel)
         }
     }
 
+    override fun getItemViewType(position: Int): Int {
+        return when (getItem(position)) {
+            is BestSellerModel -> VIEW_TYPE_BEST_SELLER
+            is SearchModel -> VIEW_TYPE_SEARCH
+            else -> VIEW_TYPE_BEST_SELLER
+        }
+    }
 
-    inner class PagingItemViewHolder(parent: ViewGroup): RecyclerView.ViewHolder(
-        LayoutInflater.from(parent.context).inflate(R.layout.item_book_list, parent, false)
-    ) {
-        private val binding = ItemBookListBinding.bind(itemView)
-
+    inner class BestSellerPagingItemViewHolder(private val binding: ItemBookListBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(bestseller: BestSellerModel) {
             binding.bestseller = bestseller
             binding.executePendingBindings()
 
             itemView.setOnClickListener {
                 bookItemClick(bestseller)
+            }
+        }
+    }
+
+    inner class SearchPagingItemViewHolder(private val binding: ItemBookSearchListBinding): RecyclerView.ViewHolder(binding.root) {
+        fun bind(search: SearchModel) {
+            binding.search = search
+            binding.executePendingBindings()
+
+            itemView.setOnClickListener {
+                bookItemClick(search)
             }
         }
     }

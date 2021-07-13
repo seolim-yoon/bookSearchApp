@@ -1,11 +1,8 @@
-package com.example.booksearchapp.data
-
-
-import com.example.booksearchapp.ui.model.BestSellerModel
-import com.example.booksearchapp.ui.model.RecommendModel
+package com.example.booksearchapp.data.response
+import com.example.booksearchapp.data.database.model.BestSellerModel
 import com.google.gson.annotations.SerializedName
 
-data class RecommendResult(
+data class BestSellerResult(
     @SerializedName("item")
     val item: List<Item>
 ) {
@@ -48,6 +45,8 @@ data class RecommendResult(
         val pubDate: String,
         @SerializedName("publisher")
         val publisher: String,
+        @SerializedName("rank")
+        val rank: Int,
         @SerializedName("reviewCount")
         val reviewCount: Int,
         @SerializedName("saleStatus")
@@ -59,7 +58,7 @@ data class RecommendResult(
     )
 }
 
-fun BestSellerResult.transformRecommendModel() =
+fun BestSellerResult.transformBestSellerModel() =
     this.item.map { book ->
-        RecommendModel(book.itemId, book.title, book.author, book.coverSmallUrl)
+        BestSellerModel(book.itemId, book.rank, book.title, book.author, book.coverSmallUrl)
     }

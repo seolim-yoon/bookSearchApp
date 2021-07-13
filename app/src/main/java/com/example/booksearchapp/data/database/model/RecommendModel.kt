@@ -1,4 +1,4 @@
-package com.example.booksearchapp.ui.model
+package com.example.booksearchapp.data.database.model
 
 data class RecommendModel(
     val itemId: Int,

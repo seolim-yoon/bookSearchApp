@@ -2,12 +2,12 @@ package com.example.booksearchapp.repository
 
 import android.app.Application
 import androidx.paging.PagingSource
-import com.example.booksearchapp.data.BestSellerResult
+import com.example.booksearchapp.data.response.BestSellerResult
 import com.example.booksearchapp.data.RetrofitBuilder
 import com.example.booksearchapp.data.database.AppDatabase
-import com.example.booksearchapp.data.database.BookDao
-import com.example.booksearchapp.ui.model.BaseModel
-import com.example.booksearchapp.ui.model.BestSellerModel
+import com.example.booksearchapp.data.database.dao.BookDao
+import com.example.booksearchapp.data.database.model.BestSellerModel
+import com.example.booksearchapp.data.response.SearchResult
 import io.reactivex.Single
 
 class BookRepository(application: Application) {
@@ -15,10 +15,11 @@ class BookRepository(application: Application) {
     private val appDatabase = AppDatabase.getInstance(application)!!
     private val bookDao: BookDao = appDatabase.bookDao()
 
+    fun searchBooksByName(query: String, page: Int) : Single<SearchResult> = RetrofitBuilder.service.searchBooksByName(key, query, page);
 
     fun getBestSellerResult(): Single<BestSellerResult> = RetrofitBuilder.service.getBestSellerBooks(key)
 
-    fun insertBestSellers(bestSellerModel: BestSellerModel) = bookDao.insertBestSeller(bestSellerModel)
+    fun insertAllBestSeller(bestSellerModels: List<BestSellerModel>) = bookDao.insertAllBestSeller(bestSellerModels)
 
     fun getAllBestSellers() : PagingSource<Int, BestSellerModel> = bookDao.getAllBestSellers()
 

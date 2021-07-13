@@ -1,4 +1,4 @@
-package com.example.booksearchapp.ui.model
+package com.example.booksearchapp.data.database.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

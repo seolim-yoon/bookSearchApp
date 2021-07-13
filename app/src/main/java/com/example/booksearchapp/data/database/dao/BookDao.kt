@@ -1,11 +1,12 @@
-package com.example.booksearchapp.data.database
+package com.example.booksearchapp.data.database.dao
 
 import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.example.booksearchapp.ui.model.BestSellerModel
+import com.example.booksearchapp.data.database.model.BaseModel
+import com.example.booksearchapp.data.database.model.BestSellerModel
 
 @Dao
 interface BookDao {
@@ -13,5 +14,5 @@ interface BookDao {
     fun getAllBestSellers(): PagingSource<Int, BestSellerModel>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insertBestSeller(bestSellerModel: BestSellerModel)
+    fun insertAllBestSeller(bestSellerModels: List<BestSellerModel>)
 }
