@@ -37,10 +37,11 @@
                 android:textStyle="bold"
                 android:maxLines="1"
                 android:ellipsize="end"
-                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
+                app:layout_constrainedWidth="true"
                 app:layout_constraintTop_toTopOf="@id/iv_search_book_img"
                 app:layout_constraintStart_toEndOf="@id/iv_search_book_img"
-                app:layout_constraintRight_toLeftOf="@id/tv_search_book_status"
+                app:layout_constraintEnd_toStartOf="@id/tv_search_book_status"
                 app:layout_constraintBottom_toTopOf="@id/tv_search_book_author"/>
 
             <TextView
@@ -51,7 +52,7 @@
                 android:textSize="13dp"
                 android:maxLines="1"
                 android:ellipsize="end"
-                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginTop="5dp"
                 app:layout_constraintTop_toBottomOf="@id/tv_search_book_title"
                 app:layout_constraintLeft_toRightOf="@id/iv_search_book_img"/>
@@ -63,9 +64,9 @@
                 android:text="@{search.saleStatus}"
                 android:textSize="13dp"
                 android:textColor="@color/red"
-                android:layout_marginRight="10dp"
+                android:layout_marginEnd="10dp"
                 app:layout_constraintEnd_toStartOf="@id/tv_search_book_price"
-                app:layout_constraintLeft_toRightOf="@id/tv_search_book_title"
+                app:layout_constraintStart_toEndOf="@id/tv_search_book_title"
                 app:layout_constraintTop_toTopOf="@id/tv_search_book_title"
                 app:layout_constraintBottom_toBottomOf="@id/tv_search_book_title"/>
 
@@ -75,9 +76,9 @@
                 android:layout_height="wrap_content"
                 android:text="@{String.valueOf(search.priceStandard)}"
                 android:textSize="13dp"
-                android:layout_marginRight="20dp"
+                android:layout_marginEnd="20dp"
                 app:layout_constraintTop_toTopOf="@id/tv_search_book_title"
-                app:layout_constraintLeft_toRightOf="@id/tv_search_book_status"
+                app:layout_constraintStart_toEndOf="@id/tv_search_book_status"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toBottomOf="@id/tv_search_book_title"/>
 
@@ -87,7 +88,7 @@
                 android:layout_height="0dp"
                 android:text="@{search.description}"
                 android:textSize="13dp"
-                android:layout_marginRight="10dp"
+                android:layout_marginEnd="10dp"
                 android:layout_marginTop="10dp"
                 android:maxLines="4"
                 android:ellipsize="end"

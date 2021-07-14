@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 import com.example.booksearchapp.data.database.dao.BookDao
 import com.example.booksearchapp.data.database.model.BestSellerModel
 
-@Database(entities = [BestSellerModel::class], version = 1)
+@Database(entities = [BestSellerModel::class], version = 2)
 abstract class AppDatabase: RoomDatabase() {
     abstract fun bookDao(): BookDao
 
@@ -18,7 +18,7 @@ abstract class AppDatabase: RoomDatabase() {
             if (INSTANCE == null) {
                 synchronized(AppDatabase::class.java) {
                     INSTANCE = Room.databaseBuilder(context.applicationContext,
-                        AppDatabase::class.java, "database")
+                        AppDatabase::class.java, "book_db")
                         .fallbackToDestructiveMigration()
                         .build()
                 }

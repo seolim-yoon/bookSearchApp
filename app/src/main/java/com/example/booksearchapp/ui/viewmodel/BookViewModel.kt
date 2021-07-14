@@ -29,9 +29,10 @@ class BookViewModel(application: Application): BaseViewModel(application) {
         SearchBookPagingSource(bookRepository, keyword ?: "")
     }.flow.cachedIn(viewModelScope)
 
-    fun getSearchBooks(query: String) {
-        searchKeyword.value = query
-        keyword = query
+    fun getSearchBooks(query: String?) {
+        Log.v("seolim", "query : $query")
+        keyword = query ?: ""
+        searchKeyword.value = query ?: ""
     }
 
     fun getBestSellerResult() {

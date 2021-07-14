@@ -20,12 +20,12 @@ class SearchBookPagingSource(
         return repository.searchBooksByName(query, nextPage)
             .subscribeOn(Schedulers.io())
             .map<LoadResult<Int, BaseModel>> { result ->
-                Log.v("seolim", "nextPage : " + nextPage)
+                Log.v("seolim", "nextPage : $nextPage")
                 Log.v("seolim", "loadSize : " + params.loadSize)
                 LoadResult.Page(
                     data = result.transformSearchModel(),
                     prevKey = null,
-                    nextKey = nextPage + 1
+                    nextKey = if(query.equals("")) null else nextPage + 1
                 )
             }
             .onErrorReturn { e ->

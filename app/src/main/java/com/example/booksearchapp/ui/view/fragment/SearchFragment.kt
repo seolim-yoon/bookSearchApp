@@ -1,6 +1,7 @@
 package com.example.booksearchapp.ui.view.fragment
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -47,6 +48,7 @@ class SearchFragment : BaseFragment<FragmentSearchBinding, BookViewModel>() {
         }
 
         viewModel.searchKeyword.observe(viewLifecycleOwner, Observer { keyword ->
+            Log.e("seolim", "refresh")
             bookAdapter.refresh()
         })
 

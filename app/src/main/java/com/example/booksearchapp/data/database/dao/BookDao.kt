@@ -5,7 +5,6 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.example.booksearchapp.data.database.model.BaseModel
 import com.example.booksearchapp.data.database.model.BestSellerModel
 
 @Dao

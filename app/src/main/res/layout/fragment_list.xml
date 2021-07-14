@@ -36,20 +36,58 @@
 
         <TextView
             android:id="@+id/tv_best_seller_title"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/best_seller"
-            android:textSize="18dp"
+            android:textSize="20dp"
             android:textColor="@color/black"
             android:textStyle="bold"
-            android:gravity="center"
-            android:padding="10dp"
-            android:layout_marginBottom="3dp"
-            android:background="@color/title"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="10dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/ly_toolbar"
             app:layout_constraintBottom_toTopOf="@id/sl_swipe_refresh"/>
+
+        <ImageView
+            android:id="@+id/iv_best_seller_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_best_seller"
+            android:layout_marginStart="5dp"
+            app:layout_constraintStart_toEndOf="@id/tv_best_seller_title"
+            app:layout_constraintTop_toTopOf="@id/tv_best_seller_title"
+            app:layout_constraintBottom_toBottomOf="@id/tv_best_seller_title"/>
+
+        <TextView
+            android:id="@+id/btn_select_category"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:text="국내도서"
+            android:textSize="11dp"
+            android:gravity="center"
+            android:padding="10dp"
+            android:textColor="@color/color_category"
+            android:background="@drawable/bg_select_category"
+            app:layout_constraintStart_toEndOf="@id/iv_best_seller_icon"
+            app:layout_constraintTop_toTopOf="@id/tv_best_seller_title"
+            app:layout_constraintBottom_toBottomOf="@id/tv_best_seller_title"/>
+
+        <TextView
+            android:id="@+id/btn_select_sub_category"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="All"
+            android:textSize="11dp"
+            android:gravity="center"
+            android:padding="10dp"
+            android:textColor="@color/color_category"
+            android:background="@drawable/bg_select_category"
+            app:layout_constraintStart_toEndOf="@id/btn_select_category"
+            app:layout_constraintTop_toTopOf="@id/tv_best_seller_title"
+            app:layout_constraintBottom_toBottomOf="@id/tv_best_seller_title"/>
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/sl_swipe_refresh"
