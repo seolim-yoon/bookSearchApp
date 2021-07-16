@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#E64B80</color>
+    <color name="colorPrimary">#2196F3</color>
     <color name="purple_200">#FFBB86FC</color>
     <color name="purple_500">#FF6200EE</color>
     <color name="purple_700">#FF3700B3</color>
@@ -13,7 +13,6 @@
     <color name="white_gray">#D9D9DA</color>
     <color name="Transparent">#00000000</color>
     <color name="progress_bg">#9F9A9A9A</color>
-    <color name="backgroud">#F8EBEB</color>
+    <color name="backgroud">#F7FBFD</color>
     <color name="content">#ffffff</color>
-    <color name="category">#FBA0A0</color>
 </resources>

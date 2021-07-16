@@ -44,6 +44,10 @@ class ListFragment : BaseFragment<FragmentListBinding, BookViewModel>() {
             }
         }
 
+        viewDataBinding.btnSelectCategory.setOnClickListener {
+            CategoryBottomSheetFragment(requireContext().applicationContext).show(requireActivity().supportFragmentManager, "CategoryBottomSheetFragment")
+        }
+
         viewModel.getBestSellerResult()
         lifecycleScope.launch {
             viewModel.bestSellerPager.collectLatest { pagingData ->
