@@ -1,6 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable
+            name="viewmodel"
+            type="com.example.booksearchapp.ui.viewmodel.CategoryViewModel" />
+        <import type="com.example.booksearchapp.util.Category"/>
+    </data>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/tv_category_domestic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:text="국내도서"
+            android:textSize="12dp"
+            android:gravity="center"
+            android:padding="10dp"
+            android:layout_margin="10dp"
+            android:textColor="@{viewmodel.selectCategory == Category.DOMESTIC.num ? @color/color_category : @color/black}"
+            android:background="@{viewmodel.selectCategory == Category.DOMESTIC.num ? @drawable/bg_select_category : @drawable/bg_unselect_category}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:onClick="@{() -> viewmodel.selectCategory(Category.DOMESTIC.num)}"/>
+
+        <TextView
+            android:id="@+id/tv_category_foreign"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:text="외국도서"
+            android:textSize="12dp"
+            android:gravity="center"
+            android:padding="10dp"
+            android:layout_margin="10dp"
+            android:textColor="@{viewmodel.selectCategory == Category.FOREIGN.num ? @color/color_category : @color/black}"
+            android:background="@{viewmodel.selectCategory == Category.FOREIGN.num ? @drawable/bg_select_category : @drawable/bg_unselect_category}"
+            app:layout_constraintStart_toEndOf="@id/tv_category_domestic"
+            app:layout_constraintTop_toTopOf="@id/tv_category_domestic"
+            app:layout_constraintBottom_toBottomOf="@id/tv_category_domestic"
+            android:onClick="@{() -> viewmodel.selectCategory(Category.FOREIGN.num)}"/>
+
+        <TextView
+            android:id="@+id/tv_category_record"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:text="음반"
+            android:textSize="12dp"
+            android:gravity="center"
+            android:padding="10dp"
+            android:layout_margin="10dp"
+            android:textColor="@{viewmodel.selectCategory == Category.RECORD.num ? @color/color_category : @color/black}"
+            android:background="@{viewmodel.selectCategory == Category.RECORD.num ? @drawable/bg_select_category : @drawable/bg_unselect_category}"
+            app:layout_constraintStart_toEndOf="@id/tv_category_foreign"
+            app:layout_constraintTop_toTopOf="@id/tv_category_foreign"
+            app:layout_constraintBottom_toBottomOf="@id/tv_category_foreign"
+            android:onClick="@{() -> viewmodel.selectCategory(Category.RECORD.num)}"/>
+
+        <TextView
+            android:id="@+id/tv_category_dvd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:text="DVD"
+            android:textSize="12dp"
+            android:gravity="center"
+            android:padding="10dp"
+            android:layout_margin="10dp"
+            android:textColor="@{viewmodel.selectCategory == Category.DVD.num ? @color/color_category : @color/black}"
+            android:background="@{viewmodel.selectCategory == Category.DVD.num ? @drawable/bg_select_category : @drawable/bg_unselect_category}"
+            app:layout_constraintStart_toEndOf="@id/tv_category_record"
+            app:layout_constraintTop_toTopOf="@id/tv_category_record"
+            app:layout_constraintBottom_toBottomOf="@id/tv_category_record"
+            android:onClick="@{() -> viewmodel.selectCategory(Category.DVD.num)}"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
