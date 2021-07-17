@@ -14,9 +14,10 @@ interface BookService {
         @Query("start") Page: Int
     ): Single<SearchResult>
 
-    @GET("api/bestSeller.api?categoryId=100&output=json")
+    @GET("api/bestSeller.api?output=json")
     fun getBestSellerBooks(
-        @Query("key") apiKey: String
+        @Query("key") apiKey: String,
+        @Query("categoryId") categoryId: String
     ) : Single<BestSellerResult>
 
 //    @GET("api/recommend.api?categoryId=100&output=json")

@@ -17,10 +17,10 @@ class BookRepository(application: Application) {
 
     fun searchBooksByName(query: String, page: Int) : Single<SearchResult> = RetrofitBuilder.service.searchBooksByName(key, query, page);
 
-    fun getBestSellerResult(): Single<BestSellerResult> = RetrofitBuilder.service.getBestSellerBooks(key)
+    fun getBestSellerResult(categoryId: String): Single<BestSellerResult> = RetrofitBuilder.service.getBestSellerBooks(key, categoryId)
 
     fun insertAllBestSeller(bestSellerModels: List<BestSellerModel>) = bookDao.insertAllBestSeller(bestSellerModels)
 
-    fun getAllBestSellers() : PagingSource<Int, BestSellerModel> = bookDao.getAllBestSellers()
+    fun getAllBestSellersByCategory(categoryId: String) : PagingSource<Int, BestSellerModel> = bookDao.getAllBestSellersByCategory(categoryId)
 
 }

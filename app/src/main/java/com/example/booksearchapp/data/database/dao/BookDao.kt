@@ -9,8 +9,8 @@ import com.example.booksearchapp.data.database.model.BestSellerModel
 
 @Dao
 interface BookDao {
-    @Query("SELECT * FROM BestSeller ORDER BY rank ASC")
-    fun getAllBestSellers(): PagingSource<Int, BestSellerModel>
+    @Query("SELECT * FROM BestSeller WHERE categoryId LIKE :categoryId ORDER BY rank ASC")
+    fun getAllBestSellersByCategory(categoryId: String): PagingSource<Int, BestSellerModel>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertAllBestSeller(bestSellerModels: List<BestSellerModel>)

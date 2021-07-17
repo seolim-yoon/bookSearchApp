@@ -20,10 +20,5 @@ class CategoryFragment: BaseFragment<FragmentCategoryBinding, CategoryViewModel>
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewDataBinding.viewmodel = viewModel
-        initView()
-    }
-
-    private fun initView() {
-
     }
 }

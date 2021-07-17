@@ -62,7 +62,7 @@
             app:layout_constraintStart_toEndOf="@id/et_book_search_title"
             app:layout_constraintBottom_toBottomOf="@+id/et_book_search_title"
             app:layout_constraintEnd_toEndOf="parent"
-            android:onClick="@{() -> viewmodel.getSearchBooks(viewmodel.searchKeyword)}"/>
+            android:onClick="@{() -> viewmodel.doSearchBooks(viewmodel.searchKeyword)}"/>
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/sl_swipe_refresh"

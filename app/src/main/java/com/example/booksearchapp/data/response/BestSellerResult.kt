@@ -1,10 +1,15 @@
 package com.example.booksearchapp.data.response
+
 import com.example.booksearchapp.data.database.model.BestSellerModel
 import com.google.gson.annotations.SerializedName
 
 data class BestSellerResult(
     @SerializedName("item")
-    val item: List<Item>
+    val item: List<Item>,
+    @SerializedName("searchCategoryId")
+    val searchCategoryId: String,
+    @SerializedName("searchCategoryName")
+    val searchCategoryName: String
 ) {
     data class Item(
         @SerializedName("additionalLink")
@@ -60,5 +65,5 @@ data class BestSellerResult(
 
 fun BestSellerResult.transformBestSellerModel() =
     this.item.map { book ->
-        BestSellerModel(book.itemId, book.rank, book.title, book.author, book.coverSmallUrl)
+        BestSellerModel(book.itemId, book.rank, book.title, book.author, book.coverSmallUrl, this.searchCategoryId, this.searchCategoryName)
     }

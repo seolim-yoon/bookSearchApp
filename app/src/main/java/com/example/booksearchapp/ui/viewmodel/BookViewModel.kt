@@ -13,38 +13,46 @@ import com.example.booksearchapp.data.database.model.BaseModel
 import com.example.booksearchapp.data.paging.SearchBookPagingSource
 import com.example.booksearchapp.data.response.transformBestSellerModel
 import com.example.booksearchapp.repository.BookRepository
+import com.example.booksearchapp.util.Category
 import io.reactivex.schedulers.Schedulers
 
-class BookViewModel(application: Application): BaseViewModel(application) {
+class BookViewModel(application: Application) : BaseViewModel(application) {
     private val bookRepository = BookRepository(application)
     private var keyword = ""
 
     var searchKeyword: MutableLiveData<String> = MutableLiveData()
+    var selectCategoryId: MutableLiveData<String> = MutableLiveData()
 
+    // Home 화면 베스트셀러 Pager
     val bestSellerPager = Pager(PagingConfig(pageSize = 10)) {
-        bookRepository.getAllBestSellers() as PagingSource<Int, BaseModel>
+        // Room DB에서 선택한 카테고리에 해당하는 책 리스트를 가져옴
+        bookRepository.getAllBestSellersByCategory(selectCategoryId.value ?: Category.ALL.domestic) as PagingSource<Int, BaseModel>
     }.flow.cachedIn(viewModelScope)
 
+    // Search 화면 Pager
     val searchPager = Pager(PagingConfig(pageSize = 10)) {
-        SearchBookPagingSource(bookRepository, keyword ?: "")
+        SearchBookPagingSource(bookRepository, keyword)
     }.flow.cachedIn(viewModelScope)
 
-    fun getSearchBooks(query: String?) {
-        Log.v("seolim", "query : $query")
+    fun doSearchBooks(query: String?) {
         keyword = query ?: ""
         searchKeyword.value = query ?: ""
     }
 
-    fun getBestSellerResult() {
+    // 선택한 카테고리의 책 결과를 서버에서 받아와서 Room DB에 넣음
+    fun getBestSellerResult(categoryId: String) {
         addDisposable(
-                bookRepository.getBestSellerResult()
+                bookRepository.getBestSellerResult(categoryId)
                         .subscribeOn(Schedulers.io())
                         .subscribe({ modelList ->
                             bookRepository.insertAllBestSeller(modelList.transformBestSellerModel())
-                        }, { e->
+                        }, { e ->
                             Log.e("seolim", "error : " + e.message)
-
                         })
         )
+    }
+
+    fun selectOK() {
+//        this.selectCategoryId.value = selectCategoryId
     }
 }
