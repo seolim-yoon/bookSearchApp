@@ -3,7 +3,7 @@
     <data>
         <variable
             name="viewmodel"
-            type="com.example.booksearchapp.ui.viewmodel.CategoryViewModel" />
+            type="com.example.booksearchapp.ui.viewmodel.BookViewModel" />
         <import type="com.example.booksearchapp.util.Category"/>
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout

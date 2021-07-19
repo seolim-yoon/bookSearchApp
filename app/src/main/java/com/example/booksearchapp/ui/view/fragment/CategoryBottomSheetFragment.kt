@@ -33,7 +33,7 @@ class CategoryBottomSheetFragment() : BottomSheetDialogFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.layout_category_bottom_sheet, container, false)
-        binding.bookviewmodel = viewModel
+        binding.viewmodel = viewModel
         initView()
         return binding.root
     }

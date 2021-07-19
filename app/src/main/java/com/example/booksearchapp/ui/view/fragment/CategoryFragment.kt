@@ -6,15 +6,15 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.booksearchapp.R
 import com.example.booksearchapp.base.BaseFragment
 import com.example.booksearchapp.databinding.FragmentCategoryBinding
-import com.example.booksearchapp.ui.viewmodel.CategoryViewModel
+import com.example.booksearchapp.ui.viewmodel.BookViewModel
 
-class CategoryFragment: BaseFragment<FragmentCategoryBinding, CategoryViewModel>() {
+class CategoryFragment: BaseFragment<FragmentCategoryBinding, BookViewModel>() {
     override val layoutResID: Int = R.layout.fragment_category
-    override val viewModel: CategoryViewModel by lazy {
+    override val viewModel: BookViewModel by lazy {
         ViewModelProvider(
                 requireActivity(),
                 ViewModelProvider.AndroidViewModelFactory(requireActivity().application)
-        ).get(CategoryViewModel::class.java)
+        ).get(BookViewModel::class.java)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

@@ -2,12 +2,8 @@
 <layout xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
         <variable
-            name="bookviewmodel"
+            name="viewmodel"
             type="com.example.booksearchapp.ui.viewmodel.BookViewModel" />
-
-        <variable
-            name="categoryviewmodel"
-            type="com.example.booksearchapp.ui.viewmodel.CategoryViewModel" />
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -60,7 +56,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/vp_category"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:onClick="@{() -> bookviewmodel.selectOK()}"/>
+            android:onClick="@{() -> viewmodel.selectOK()}"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
