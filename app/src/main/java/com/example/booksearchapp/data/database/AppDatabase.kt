@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 import com.example.booksearchapp.data.database.dao.BookDao
 import com.example.booksearchapp.data.database.model.BestSellerModel
 
-@Database(entities = [BestSellerModel::class], version = 4)
+@Database(entities = [BestSellerModel::class], version = 6, exportSchema = false)
 abstract class AppDatabase: RoomDatabase() {
     abstract fun bookDao(): BookDao
 

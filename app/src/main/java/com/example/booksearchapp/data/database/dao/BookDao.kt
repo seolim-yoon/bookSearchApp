@@ -12,6 +12,6 @@ interface BookDao {
     @Query("SELECT * FROM BestSeller WHERE categoryId LIKE :categoryId ORDER BY rank ASC")
     fun getAllBestSellersByCategory(categoryId: String): PagingSource<Int, BestSellerModel>
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAllBestSeller(bestSellerModels: List<BestSellerModel>)
 }

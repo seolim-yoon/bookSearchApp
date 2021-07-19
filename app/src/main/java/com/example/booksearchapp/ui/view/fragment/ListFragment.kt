@@ -23,6 +23,8 @@ class ListFragment : BaseFragment<FragmentListBinding, BookViewModel>() {
         ).get(BookViewModel::class.java)
     }
 
+
+    // TODO : DetailFragment
     private val bookAdapter by lazy {
         BookListPagingAdapter {
 

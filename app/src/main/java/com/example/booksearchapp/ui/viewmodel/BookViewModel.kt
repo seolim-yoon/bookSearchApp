@@ -36,6 +36,7 @@ class BookViewModel(application: Application) : BaseViewModel(application) {
         selectSubCategory.value = Category.ALL
         requestCategoryId.value = Category.ALL.domestic
         subCategoryList.value = bookRepository.domesticList
+        getBestSellerResult(Category.ALL.domestic)
     }
 
     // Home 화면 베스트셀러 Pager
