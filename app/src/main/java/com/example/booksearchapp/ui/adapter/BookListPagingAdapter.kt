@@ -20,7 +20,7 @@ class BookListPagingAdapter(
     companion object {
         val diffCallback = object : DiffUtil.ItemCallback<BaseModel>() {
             override fun areItemsTheSame(oldItem: BaseModel, newItem: BaseModel): Boolean {
-                return oldItem == newItem
+                return false
             }
 
             override fun areContentsTheSame(oldItem: BaseModel, newItem: BaseModel): Boolean {

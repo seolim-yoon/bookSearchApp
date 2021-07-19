@@ -4,6 +4,7 @@
         <variable
             name="viewmodel"
             type="com.example.booksearchapp.ui.viewmodel.BookViewModel" />
+        <import type="android.view.View"/>
         <import type="com.example.booksearchapp.util.Category"/>
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -24,7 +25,7 @@
             android:background="@{viewmodel.selectSubCategory == Category.ALL ? @drawable/bg_select_category : @drawable/bg_unselect_category}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:onClick="@{() -> viewmodel.selectSubCategory(Category.ALL)}"/>
+            android:onClick="@{() -> viewmodel.selectSubCategoryInDialog(Category.ALL)}"/>
 
         <TextView
             android:id="@+id/tv_sub_category_2"
@@ -40,7 +41,7 @@
             app:layout_constraintStart_toEndOf="@id/tv_sub_category_1"
             app:layout_constraintTop_toTopOf="@id/tv_sub_category_1"
             app:layout_constraintBottom_toBottomOf="@id/tv_sub_category_1"
-            android:onClick="@{() -> viewmodel.selectSubCategory(Category.SUB1)}"/>
+            android:onClick="@{() -> viewmodel.selectSubCategoryInDialog(Category.SUB1)}"/>
 
         <TextView
             android:id="@+id/tv_sub_category_3"
@@ -56,7 +57,7 @@
             app:layout_constraintStart_toEndOf="@id/tv_sub_category_2"
             app:layout_constraintTop_toTopOf="@id/tv_sub_category_2"
             app:layout_constraintBottom_toBottomOf="@id/tv_sub_category_2"
-            android:onClick="@{() -> viewmodel.selectSubCategory(Category.SUB2)}"/>
+            android:onClick="@{() -> viewmodel.selectSubCategoryInDialog(Category.SUB2)}"/>
 
         <TextView
             android:id="@+id/tv_sub_category_4"
@@ -72,7 +73,7 @@
             app:layout_constraintStart_toEndOf="@id/tv_sub_category_3"
             app:layout_constraintTop_toTopOf="@id/tv_sub_category_3"
             app:layout_constraintBottom_toBottomOf="@id/tv_sub_category_3"
-            android:onClick="@{() -> viewmodel.selectSubCategory(Category.SUB3)}"/>
+            android:onClick="@{() -> viewmodel.selectSubCategoryInDialog(Category.SUB3)}"/>
 
         <TextView
             android:id="@+id/tv_sub_category_5"
@@ -88,7 +89,7 @@
             app:layout_constraintStart_toEndOf="@id/tv_sub_category_4"
             app:layout_constraintTop_toTopOf="@id/tv_sub_category_4"
             app:layout_constraintBottom_toBottomOf="@id/tv_sub_category_4"
-            android:onClick="@{() -> viewmodel.selectSubCategory(Category.SUB4)}"/>
+            android:onClick="@{() -> viewmodel.selectSubCategoryInDialog(Category.SUB4)}"/>
 
         <TextView
             android:id="@+id/tv_sub_category_6"
@@ -103,7 +104,8 @@
             android:background="@{viewmodel.selectSubCategory == Category.SUB5 ? @drawable/bg_select_category : @drawable/bg_unselect_category}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_sub_category_1"
-            android:onClick="@{() -> viewmodel.selectSubCategory(Category.SUB5)}"/>
+            android:onClick="@{() -> viewmodel.selectSubCategoryInDialog(Category.SUB5)}"
+            android:visibility="@{viewmodel.subCategoryList.get(Category.SUB5.ordinal()).equals(``) ? View.GONE : View.VISIBLE}"/>
 
         <TextView
             android:id="@+id/tv_sub_category_7"
@@ -119,7 +121,8 @@
             app:layout_constraintStart_toEndOf="@id/tv_sub_category_6"
             app:layout_constraintTop_toTopOf="@id/tv_sub_category_6"
             app:layout_constraintBottom_toBottomOf="@id/tv_sub_category_6"
-            android:onClick="@{() -> viewmodel.selectSubCategory(Category.SUB6)}"/>
+            android:onClick="@{() -> viewmodel.selectSubCategoryInDialog(Category.SUB6)}"
+            android:visibility="@{viewmodel.subCategoryList.get(Category.SUB6.ordinal()).equals(``) ? View.GONE : View.VISIBLE}"/>
 
         <TextView
             android:id="@+id/tv_sub_category_8"
@@ -135,7 +138,8 @@
             app:layout_constraintStart_toEndOf="@id/tv_sub_category_7"
             app:layout_constraintTop_toTopOf="@id/tv_sub_category_7"
             app:layout_constraintBottom_toBottomOf="@id/tv_sub_category_7"
-            android:onClick="@{() -> viewmodel.selectSubCategory(Category.SUB7)}"/>
+            android:onClick="@{() -> viewmodel.selectSubCategoryInDialog(Category.SUB7)}"
+            android:visibility="@{viewmodel.subCategoryList.get(Category.SUB7.ordinal()).equals(``) ? View.GONE : View.VISIBLE}"/>
 
         <TextView
             android:id="@+id/tv_sub_category_9"
@@ -151,7 +155,8 @@
             app:layout_constraintStart_toEndOf="@id/tv_sub_category_8"
             app:layout_constraintTop_toTopOf="@id/tv_sub_category_8"
             app:layout_constraintBottom_toBottomOf="@id/tv_sub_category_8"
-            android:onClick="@{() -> viewmodel.selectSubCategory(Category.SUB8)}"/>
+            android:onClick="@{() -> viewmodel.selectSubCategoryInDialog(Category.SUB8)}"
+            android:visibility="@{viewmodel.subCategoryList.get(Category.SUB8.ordinal()).equals(``) ? View.GONE : View.VISIBLE}"/>
 
         <TextView
             android:id="@+id/tv_sub_category_10"
@@ -167,7 +172,8 @@
             app:layout_constraintStart_toEndOf="@id/tv_sub_category_9"
             app:layout_constraintTop_toTopOf="@id/tv_sub_category_9"
             app:layout_constraintBottom_toBottomOf="@id/tv_sub_category_9"
-            android:onClick="@{() -> viewmodel.selectSubCategory(Category.SUB9)}"/>
+            android:onClick="@{() -> viewmodel.selectSubCategoryInDialog(Category.SUB9)}"
+            android:visibility="@{viewmodel.subCategoryList.get(Category.SUB9.ordinal()).equals(``) ? View.GONE : View.VISIBLE}"/>
 
         <TextView
             android:id="@+id/tv_sub_category_11"
@@ -182,6 +188,7 @@
             android:background="@{viewmodel.selectSubCategory == Category.SUB10 ? @drawable/bg_select_category : @drawable/bg_unselect_category}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_sub_category_6"
-            android:onClick="@{() -> viewmodel.selectSubCategory(Category.SUB10)}"/>
+            android:onClick="@{() -> viewmodel.selectSubCategoryInDialog(Category.SUB10)}"
+            android:visibility="@{viewmodel.subCategoryList.get(Category.SUB10.ordinal()).equals(``) ? View.GONE : View.VISIBLE}"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
