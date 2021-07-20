@@ -24,7 +24,7 @@
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_margin="10dp"
-                imageUrl="@{bestseller.imageUrl}"
+                imageUrlSmall="@{bestseller.imageUrlSmall}"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"/>

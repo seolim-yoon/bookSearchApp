@@ -9,7 +9,11 @@ data class BestSellerModel(
         val rank: Int = 0,
         val title: String = "",
         val author: String = "",
-        val imageUrl: String? = null,
+        val imageUrlLarge: String? = null,
+        val imageUrlSmall: String? = null,
         val categoryId: String = "100",
-        val categoryName: String = "국내도서"
+        val categoryName: String = "국내도서",
+        val priceStandard: Int = 0,
+        val saleStatus: String = "",
+        val description: String = ""
 ): BaseModel

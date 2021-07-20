@@ -1,3 +1,5 @@
 package com.example.booksearchapp.data.database.model
 
-interface BaseModel
+import java.io.Serializable
+
+interface BaseModel: Serializable

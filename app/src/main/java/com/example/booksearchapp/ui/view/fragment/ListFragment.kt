@@ -5,6 +5,7 @@ import android.view.View
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.example.booksearchapp.R
 import com.example.booksearchapp.base.BaseFragment
 import com.example.booksearchapp.databinding.FragmentListBinding
@@ -22,11 +23,11 @@ class ListFragment : BaseFragment<FragmentListBinding, BookViewModel>() {
         ).get(BookViewModel::class.java)
     }
 
-
-    // TODO : DetailFragment
     private val bookAdapter by lazy {
-        BookListPagingAdapter {
-
+        BookListPagingAdapter { model ->
+            val bundle = Bundle()
+            bundle.putSerializable("BestSellerModel", model)
+            findNavController().navigate(R.id.action_listFragment_to_detailFragment, bundle)
         }
     }
 
