@@ -15,6 +15,7 @@ import com.example.booksearchapp.data.response.BestSellerResult
 import com.example.booksearchapp.data.response.transformBestSellerModel
 import com.example.booksearchapp.repository.BookRepository
 import com.example.booksearchapp.util.Category
+import com.example.booksearchapp.util.StateResult
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
@@ -26,6 +27,9 @@ class BookViewModel(application: Application) : BaseViewModel(application) {
     var currentCategoryId: MutableLiveData<String> = MutableLiveData()
     var currentCategoryName: MutableLiveData<String> = MutableLiveData()
     var currentSubCategoryName: MutableLiveData<String> = MutableLiveData()
+
+    // 다이얼로그 상태
+    var stateResult: MutableLiveData<StateResult> = MutableLiveData()
 
     // 선택된 Category
     var selectCategory: MutableLiveData<String> = MutableLiveData()
@@ -109,6 +113,7 @@ class BookViewModel(application: Application) : BaseViewModel(application) {
 
     fun onClickOK() {
         currentCategoryId.value = selectCategoryId.value
+        stateResult.value = StateResult.OK
         getBestSellerResult(selectCategoryId.value ?: Category.ALL.domestic)
     }
 
