@@ -10,7 +10,6 @@ import androidx.paging.PagingSource
 import androidx.paging.cachedIn
 import com.example.booksearchapp.base.BaseViewModel
 import com.example.booksearchapp.data.database.model.BaseModel
-import com.example.booksearchapp.data.paging.SearchBookPagingSource
 import com.example.booksearchapp.data.response.BestSellerResult
 import com.example.booksearchapp.data.response.transformBestSellerModel
 import com.example.booksearchapp.repository.BookRepository
@@ -21,15 +20,13 @@ import io.reactivex.schedulers.Schedulers
 
 class BookViewModel(application: Application) : BaseViewModel(application) {
     private val bookRepository = BookRepository(application)
-    private var keyword = ""
 
-    var searchKeyword: MutableLiveData<String> = MutableLiveData()
     var currentCategoryId: MutableLiveData<String> = MutableLiveData()
     var currentCategoryName: MutableLiveData<String> = MutableLiveData()
     var currentSubCategoryName: MutableLiveData<String> = MutableLiveData()
 
     // 다이얼로그 상태
-    var stateResult: MutableLiveData<StateResult> = MutableLiveData()
+    var dialogState: MutableLiveData<StateResult> = MutableLiveData()
 
     // 선택된 Category
     var selectCategory: MutableLiveData<String> = MutableLiveData()
@@ -54,17 +51,6 @@ class BookViewModel(application: Application) : BaseViewModel(application) {
         bookRepository.getAllBestSellersByCategory(currentCategoryId.value ?: Category.ALL.domestic) as PagingSource<Int, BaseModel>
     }.flow.cachedIn(viewModelScope)
 
-    // Search 화면 Pager
-    val searchPager = Pager(PagingConfig(pageSize = 10)) {
-        SearchBookPagingSource(bookRepository, keyword)
-    }.flow.cachedIn(viewModelScope)
-
-    fun doSearchBooks(query: String?) {
-        keyword = query ?: ""
-        searchKeyword.value = query ?: ""
-    }
-
-    // 선택한 카테고리의 책 결과를 서버에서 받아와서 Room DB에 넣음
     private fun getBestSellerResult(categoryId: String) {
         addDisposable(
                 bookRepository.getBestSellerResult(categoryId)
@@ -77,7 +63,6 @@ class BookViewModel(application: Application) : BaseViewModel(application) {
         )
     }
 
-    // Room DB에 넣은 후 CategoryName을 가져옴
     private fun insertAllBestSeller(modelList: BestSellerResult, categoryId: String) {
         addDisposable(
                 bookRepository.insertAllBestSeller(modelList.transformBestSellerModel())
@@ -89,7 +74,6 @@ class BookViewModel(application: Application) : BaseViewModel(application) {
         )
     }
 
-    // 가져온 CategoryName을 View에 띄움
     private fun getBestSellerCategory(categoryId: String) {
         addDisposable(
                 bookRepository.getBestSellersCategory(categoryId)
@@ -113,7 +97,7 @@ class BookViewModel(application: Application) : BaseViewModel(application) {
 
     fun onClickOK() {
         currentCategoryId.value = selectCategoryId.value
-        stateResult.value = StateResult.OK
+        dialogState.value = StateResult.OK
         getBestSellerResult(selectCategoryId.value ?: Category.ALL.domestic)
     }
 

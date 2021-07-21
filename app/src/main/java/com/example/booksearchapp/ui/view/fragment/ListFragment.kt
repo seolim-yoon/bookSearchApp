@@ -33,12 +33,11 @@ class ListFragment : BaseFragment<FragmentListBinding, BookViewModel>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewDataBinding.viewmodel = viewModel
         initView()
     }
 
     private fun initView() {
-        viewDataBinding.viewmodel = viewModel
-
         with(viewDataBinding.rvBookList) {
             adapter = bookAdapter
         }
@@ -58,7 +57,7 @@ class ListFragment : BaseFragment<FragmentListBinding, BookViewModel>() {
         }
 
         // 다이얼로그에서 카테고리 선택 후 OK 버튼 누르면 선택한 카테고리의 베스트셀러 가져옴
-        viewModel.currentCategoryId.observe(viewLifecycleOwner, Observer { id ->
+        viewModel.currentCategoryId.observe(viewLifecycleOwner, Observer {
             bookAdapter.refresh()
         })
 

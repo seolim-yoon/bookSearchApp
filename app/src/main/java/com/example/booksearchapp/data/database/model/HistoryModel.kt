@@ -1,11 +1,9 @@
 package com.example.booksearchapp.data.database.model
 
 import androidx.room.Entity
+import androidx.room.PrimaryKey
 
 @Entity(tableName = "History")
 data class HistoryModel(
-        var keyword: String
-
-) {
-
-}
+        @PrimaryKey var keyword: String
+)

@@ -52,9 +52,9 @@ class CategoryBottomSheetFragment() : BottomSheetDialogFragment() {
         }.attach()
 
         // OK 버튼 누르면 다이얼로그 dismiss
-        viewModel.stateResult.observe(viewLifecycleOwner, Observer { result ->
+        viewModel.dialogState.observe(viewLifecycleOwner, Observer { result ->
             if(result == StateResult.OK) {
-                viewModel.stateResult.value = StateResult.NONE
+                viewModel.dialogState.value = StateResult.NONE
                 dismiss()
             }
         })
