@@ -46,8 +46,8 @@ class CategoryBottomSheetFragment() : BottomSheetDialogFragment() {
         // tablayout이랑 viewpager 연결
         TabLayoutMediator(binding.tabLayout, binding.vpCategory) {tab, position ->
             when(position) {
-                0 -> tab.text = "Category1"
-                1 -> tab.text = "Category2"
+                0 -> tab.text = "Category"
+                1 -> tab.text = "Type"
             }
         }.attach()
 

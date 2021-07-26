@@ -2,8 +2,12 @@ package com.example.booksearchapp.ui.view.fragment
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
+import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.View
+import android.view.inputmethod.EditorInfo
+import android.widget.TextView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -58,6 +62,14 @@ class SearchFragment : BaseFragment<FragmentSearchBinding, SearchViewModel>() {
             adapter = historyAdapter
         }
 
+        // swipe할 때 마다 리스트 새로고침
+        with(viewDataBinding.slSwipeRefresh) {
+            setOnRefreshListener {
+                searchBookAdapter.refresh()
+                isRefreshing = false
+            }
+        }
+
         viewDataBinding.etBookSearchTitle.setOnTouchListener { v, event ->
             if(event.action == MotionEvent.ACTION_DOWN) {
                 viewModel.isShowHistory.value = true
@@ -65,6 +77,16 @@ class SearchFragment : BaseFragment<FragmentSearchBinding, SearchViewModel>() {
             }
             return@setOnTouchListener false
         }
+
+        viewDataBinding.etBookSearchTitle.setOnEditorActionListener(object  : TextView.OnEditorActionListener {
+            override fun onEditorAction(v: TextView?, actionId: Int, event: KeyEvent?): Boolean {
+                if(actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    viewModel.doSearchBooks(viewModel.searchKeyword.value)
+                    return true
+                }
+                return false
+            }
+        })
 
         // history insert/delete 후 리스트 변경될 때 마다 history 리스트 갱신
         viewModel.historyList.observe(viewLifecycleOwner, Observer { keywords ->

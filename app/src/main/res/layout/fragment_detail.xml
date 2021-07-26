@@ -19,7 +19,7 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/backgroud"
+                android:background="@color/colorPrimary"
                 app:navigationIcon="@drawable/ic_icon_back">
                 <TextView
                     android:id="@+id/tv_toolbar_title"
@@ -27,7 +27,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:text="@string/title_detail"
-                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
                     android:textSize="18dp" />
             </com.google.android.material.appbar.MaterialToolbar>
         </com.google.android.material.appbar.AppBarLayout>
