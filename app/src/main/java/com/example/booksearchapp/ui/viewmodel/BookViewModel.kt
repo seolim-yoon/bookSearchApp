@@ -88,6 +88,8 @@ class BookViewModel(application: Application) : BaseViewModel(application) {
                                 currentCategoryName.value = names[0]
                                 currentSubCategoryName.value = "ALL"
                             }
+
+                            currentCategoryId.value = selectCategoryId.value
                         }, { e ->
                             Log.e("seolim", "error db : " + e.message)
 
@@ -96,9 +98,8 @@ class BookViewModel(application: Application) : BaseViewModel(application) {
     }
 
     fun onClickOK() {
-        currentCategoryId.value = selectCategoryId.value
-        dialogState.value = StateResult.OK
         getBestSellerResult(selectCategoryId.value ?: Category.ALL.domestic)
+        dialogState.value = StateResult.OK
     }
 
     fun selectCategoryInDialog(category: String) {

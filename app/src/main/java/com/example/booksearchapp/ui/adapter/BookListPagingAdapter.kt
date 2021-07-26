@@ -20,7 +20,7 @@ class BookListPagingAdapter(
     companion object {
         val diffCallback = object : DiffUtil.ItemCallback<BaseModel>() {
             override fun areItemsTheSame(oldItem: BaseModel, newItem: BaseModel): Boolean {
-                return false
+                return oldItem == newItem
             }
 
             override fun areContentsTheSame(oldItem: BaseModel, newItem: BaseModel): Boolean {
@@ -55,9 +55,11 @@ class BookListPagingAdapter(
             }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        when(holder) {
-            is BestSellerPagingItemViewHolder -> holder.bind(getItem(position) as BestSellerModel)
-            is SearchPagingItemViewHolder -> holder.bind(getItem(position) as SearchModel)
+        getItem(position)?.let { model ->
+            when(holder) {
+                is BestSellerPagingItemViewHolder -> holder.bind(model as BestSellerModel)
+                is SearchPagingItemViewHolder -> holder.bind(model as SearchModel)
+            }
         }
     }
 
