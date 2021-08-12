@@ -1,7 +1,9 @@
 package com.example.booksearchapp.ui.view.activity
 
 import android.os.Bundle
+import android.view.View
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.example.booksearchapp.R
@@ -27,6 +29,13 @@ class MainActivity : BaseActivity<ActivityMainBinding, BookViewModel>() {
     private fun init() {
         val navHostFragment: NavHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         viewDataBinding.bnMenu.setupWithNavController(navHostFragment.navController)
+
+        navHostFragment.navController.addOnDestinationChangedListener { _, destination, _ ->
+            if(destination.id == R.id.listFragment || destination.id == R.id.searchFragment)
+                viewDataBinding.bnMenu.visibility = View.VISIBLE
+            else
+                viewDataBinding.bnMenu.visibility = View.GONE
+        }
     }
 
     override fun onBackPressed() {
