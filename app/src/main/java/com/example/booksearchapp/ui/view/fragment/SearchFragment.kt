@@ -2,14 +2,12 @@ package com.example.booksearchapp.ui.view.fragment
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.booksearchapp.R
 import com.example.booksearchapp.base.BaseFragment
@@ -17,17 +15,16 @@ import com.example.booksearchapp.databinding.FragmentSearchBinding
 import com.example.booksearchapp.ui.adapter.BookListPagingAdapter
 import com.example.booksearchapp.ui.adapter.HistoryAdapter
 import com.example.booksearchapp.ui.viewmodel.SearchViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class SearchFragment : BaseFragment<FragmentSearchBinding, SearchViewModel>() {
     override val layoutResID: Int = R.layout.fragment_search
-    override val viewModel: SearchViewModel by lazy {
-        ViewModelProvider(
-                requireActivity(),
-                ViewModelProvider.AndroidViewModelFactory(requireActivity().application)
-        ).get(SearchViewModel::class.java)
-    }
+    override val viewModel: SearchViewModel by viewModels()
+
+    var searchKeyword = ""
 
     private val searchBookAdapter by lazy {
         BookListPagingAdapter {

@@ -7,7 +7,9 @@ import com.example.booksearchapp.R
 import com.example.booksearchapp.base.BaseFragment
 import com.example.booksearchapp.databinding.FragmentCategoryBinding
 import com.example.booksearchapp.ui.viewmodel.BookViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class CategoryFragment: BaseFragment<FragmentCategoryBinding, BookViewModel>() {
     override val layoutResID: Int = R.layout.fragment_category
     override val viewModel: BookViewModel by lazy {

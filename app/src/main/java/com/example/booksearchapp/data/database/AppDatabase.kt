@@ -9,7 +9,7 @@ import com.example.booksearchapp.data.database.dao.HistoryDao
 import com.example.booksearchapp.data.database.model.BestSellerModel
 import com.example.booksearchapp.data.database.model.HistoryModel
 
-@Database(entities = [BestSellerModel::class, HistoryModel::class], version = 13, exportSchema = false)
+@Database(entities = [BestSellerModel::class, HistoryModel::class], version = 14, exportSchema = false)
 abstract class AppDatabase: RoomDatabase() {
     abstract fun bookDao(): BookDao
     abstract fun historyDao(): HistoryDao

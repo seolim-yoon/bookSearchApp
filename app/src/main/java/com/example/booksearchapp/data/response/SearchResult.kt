@@ -58,8 +58,3 @@ data class SearchResult(
         val translator: String
     )
 }
-
-fun SearchResult.transformSearchModel() =
-    this.item.map { book ->
-        SearchModel(book.itemId, book.title, book.author, book.coverLargeUrl, book.priceStandard, book.saleStatus, book.description)
-    }

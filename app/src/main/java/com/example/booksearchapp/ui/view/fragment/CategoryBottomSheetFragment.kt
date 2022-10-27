@@ -14,7 +14,9 @@ import com.example.booksearchapp.ui.viewmodel.BookViewModel
 import com.example.booksearchapp.util.StateResult
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.tabs.TabLayoutMediator
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class CategoryBottomSheetFragment() : BottomSheetDialogFragment() {
     private lateinit var binding: LayoutCategoryBottomSheetBinding
     private val viewModel: BookViewModel by lazy {

@@ -3,15 +3,16 @@ package com.example.booksearchapp.ui.view.activity
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.example.booksearchapp.R
 import com.example.booksearchapp.base.BaseActivity
 import com.example.booksearchapp.databinding.ActivityMainBinding
 import com.example.booksearchapp.ui.viewmodel.BookViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import org.jetbrains.anko.toast
 
+@AndroidEntryPoint
 class MainActivity : BaseActivity<ActivityMainBinding, BookViewModel>() {
     override val layoutResID: Int = R.layout.activity_main
     override val viewModel: BookViewModel  by lazy {

@@ -1,6 +1,5 @@
 package com.example.booksearchapp.ui.viewmodel
 
-import android.app.Application
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -11,16 +10,29 @@ import androidx.paging.PagingSource
 import androidx.paging.cachedIn
 import com.example.booksearchapp.base.BaseViewModel
 import com.example.booksearchapp.data.database.model.BaseModel
+import com.example.booksearchapp.data.database.model.BestSellerModel
 import com.example.booksearchapp.data.response.BestSellerResult
-import com.example.booksearchapp.data.response.transformBestSellerModel
-import com.example.booksearchapp.repository.BookRepository
+import com.example.booksearchapp.data.response.mapper.BestSellerMapper
+import com.example.booksearchapp.repository.BookRepositoryImpl
 import com.example.booksearchapp.util.Category
 import com.example.booksearchapp.util.StateResult
+import com.skydoves.sandwich.onFailure
+import com.skydoves.sandwich.onSuccess
+import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class BookViewModel(application: Application) : BaseViewModel(application) {
-    private val bookRepository = BookRepository(application)
+@HiltViewModel
+class BookViewModel @Inject constructor(private val bookRepositoryImpl: BookRepositoryImpl) :
+    BaseViewModel() {
+    val PAGING_SIZE = 20
+    var currentPage = 0
+
+    private val _bestSellerListLiveData = MutableLiveData<List<BestSellerModel>>()
+    val bestSellerListLiveData: LiveData<List<BestSellerModel>>
+        get() = _bestSellerListLiveData
 
     private val _currentCategoryIdLiveData = MutableLiveData<String>()
     val currentCategoryIdLiveData: LiveData<String>
@@ -63,64 +75,67 @@ class BookViewModel(application: Application) : BaseViewModel(application) {
         _selectCategoryLiveData.value = Category.ALL.domestic
         _selectSubCategoryLiveData.value = Category.ALL
         _selectCategoryIdLiveData.value = Category.ALL.domestic
-        _subCategoryListLiveData.value = bookRepository.domesticList
-        getBestSellerResult(Category.ALL.domestic)
+        _subCategoryListLiveData.value = bookRepositoryImpl.domesticList
+        getBestSellerResult(Category.ALL.domestic, currentPage, PAGING_SIZE)
     }
 
     // Home 화면 베스트셀러 Pager
     val bestSellerPager = Pager(PagingConfig(pageSize = 10)) {
         // Room DB에서 선택한 카테고리에 해당하는 책 리스트를 가져옴
-        bookRepository.getAllBestSellersByCategory(_currentCategoryIdLiveData.value ?: Category.ALL.domestic) as PagingSource<Int, BaseModel>
+        bookRepositoryImpl.getAllBestSellersByCategory(_currentCategoryIdLiveData.value ?: Category.ALL.domestic) as PagingSource<Int, BaseModel>
     }.flow.cachedIn(viewModelScope)
 
-    private fun getBestSellerResult(categoryId: String) {
-        addDisposable(
-                bookRepository.getBestSellerResult(categoryId)
-                        .subscribeOn(Schedulers.io())
-                        .subscribe({ modelList ->
-                            insertAllBestSeller(modelList, categoryId)
-                        }, { e ->
-                            Log.e("seolim", "error : " + e.message)
-                        })
-        )
+    fun getBestSellerResult(categoryId: String, start: Int, maxResults: Int) {
+        viewModelScope.launch {
+            bookRepositoryImpl.getBestSellerResult(categoryId, start, maxResults)
+                .onSuccess {
+                    _bestSellerListLiveData.postValue(BestSellerMapper().map(this.data))
+                    insertAllBestSeller(this.data, categoryId)
+                }
+                .onFailure {
+                    Log.e("seolim", "error : $this")
+                }
+        }
     }
 
     private fun insertAllBestSeller(modelList: BestSellerResult, categoryId: String) {
         addDisposable(
-                bookRepository.insertAllBestSeller(modelList.transformBestSellerModel())
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe {
-                            getBestSellerCategory(categoryId)
-                        }
+            bookRepositoryImpl
+                .insertAllBestSeller(BestSellerMapper().map(modelList) ?: listOf())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    getBestSellerCategory(categoryId)
+                }
         )
     }
 
     private fun getBestSellerCategory(categoryId: String) {
         addDisposable(
-                bookRepository.getBestSellersCategory(categoryId)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe ({ name ->
-                            val names = name[0].split(">")
-                            if(names.size == 2) {
-                                _currentCategoryNameLiveData.value = names[0]
-                                _currentSubCategoryNameLiveData.value = names[1]
-                            } else {
-                                _currentCategoryNameLiveData.value = names[0]
-                                _currentSubCategoryNameLiveData.value = "ALL"
-                            }
+            bookRepositoryImpl
+                .getBestSellersCategory(categoryId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ name ->
+                    val names = name[0].split(">")
+                    if (names.size == 2) {
+                        _currentCategoryNameLiveData.value = names[0]
+                        _currentSubCategoryNameLiveData.value = names[1]
+                    } else {
+                        _currentCategoryNameLiveData.value = names[0]
+                        _currentSubCategoryNameLiveData.value = "ALL"
+                    }
 
-                            _currentCategoryIdLiveData.value = _selectCategoryIdLiveData.value
-                        }, { e ->
-                            Log.e("seolim", "error db : " + e.message)
-
-                        })
+                    _currentCategoryIdLiveData.value = _selectCategoryIdLiveData.value
+                }, { e ->
+                    Log.e("seolim", "error db : " + e.message)
+                })
         )
     }
 
     fun onClickOK() {
-        getBestSellerResult(_selectCategoryIdLiveData.value ?: Category.ALL.domestic)
+        currentPage = 0
+        getBestSellerResult(_selectCategoryIdLiveData.value ?: Category.ALL.domestic, currentPage, PAGING_SIZE)
         _dialogStateLiveData.value = StateResult.OK
     }
 
@@ -129,11 +144,11 @@ class BookViewModel(application: Application) : BaseViewModel(application) {
         _selectSubCategoryLiveData.value = Category.ALL
         _selectCategoryIdLiveData.value = category
         _subCategoryListLiveData.value = when (category) {
-            Category.ALL.domestic -> bookRepository.domesticList
-            Category.ALL.foreign -> bookRepository.foreignList
-            Category.ALL.record -> bookRepository.recordList
-            Category.ALL.dvd -> bookRepository.dvdList
-            else -> bookRepository.domesticList
+            Category.ALL.domestic -> bookRepositoryImpl.domesticList
+            Category.ALL.foreign -> bookRepositoryImpl.foreignList
+            Category.ALL.record -> bookRepositoryImpl.recordList
+            Category.ALL.dvd -> bookRepositoryImpl.dvdList
+            else -> bookRepositoryImpl.domesticList
         }
     }
 
@@ -150,6 +165,5 @@ class BookViewModel(application: Application) : BaseViewModel(application) {
 
     fun changeDialogState(state: StateResult) {
         _dialogStateLiveData.value = state
-
     }
 }

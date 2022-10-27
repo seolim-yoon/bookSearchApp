@@ -41,7 +41,6 @@
             android:id="@+id/et_book_search_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@={viewmodel.searchKeywordLiveData}"
             android:textSize="13dp"
             android:inputType="text"
             android:maxLines="1"

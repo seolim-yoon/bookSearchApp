@@ -57,8 +57,3 @@ data class RecommendResult(
         val translator: String
     )
 }
-
-fun RecommendResult.transformRecommendModel() =
-    this.item.map { book ->
-        RecommendModel(book.itemId, book.title, book.author, book.coverSmallUrl)
-    }

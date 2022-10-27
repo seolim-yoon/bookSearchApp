@@ -63,8 +63,3 @@ data class BestSellerResult(
     )
 }
 
-fun BestSellerResult.transformBestSellerModel() =
-    this.item.map { book ->
-        BestSellerModel(book.itemId, book.rank, book.title, book.author, book.coverLargeUrl, book.coverSmallUrl,
-                this.searchCategoryId, this.searchCategoryName, book.priceStandard, book.saleStatus, book.description)
-    }

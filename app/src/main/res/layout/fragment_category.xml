@@ -26,7 +26,7 @@
             android:background="@{viewmodel.selectCategoryLiveData == Category.ALL.domestic ? @drawable/bg_select_category : @drawable/bg_unselect_category}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:onClick="@{() -> viewmodel.selectCategoryLiveDataInDialog(Category.ALL.domestic)}"/>
+            android:onClick="@{() -> viewmodel.selectCategoryInDialog(Category.ALL.domestic)}"/>
 
         <TextView
             android:id="@+id/tv_category_foreign"
@@ -77,6 +77,6 @@
             app:layout_constraintStart_toEndOf="@id/tv_category_record"
             app:layout_constraintTop_toTopOf="@id/tv_category_record"
             app:layout_constraintBottom_toBottomOf="@id/tv_category_record"
-            android:onClick="@{() -> viewmodel.selectCategoryLiveDataInDialog(Category.ALL.dvd)}"/>
+            android:onClick="@{() -> viewmodel.selectCategoryInDialog(Category.ALL.dvd)}"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
