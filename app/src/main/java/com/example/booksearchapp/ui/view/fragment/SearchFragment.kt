@@ -38,7 +38,7 @@ class SearchFragment : BaseFragment<FragmentSearchBinding, SearchViewModel>() {
     private val historyAdapter by lazy {
         HistoryAdapter({ selectHistory ->
             // 이전 검색 기록 클릭
-            viewModel.isShowHistory.value = false
+            viewModel.changeIsShowHistory(false)
             viewModel.doSearchBooks(selectHistory.keyword)
         }, { deleteHistory ->
             // 이전 검색 기록 삭제 버튼 클릭
@@ -72,7 +72,7 @@ class SearchFragment : BaseFragment<FragmentSearchBinding, SearchViewModel>() {
 
         viewDataBinding.etBookSearchTitle.setOnTouchListener { v, event ->
             if(event.action == MotionEvent.ACTION_DOWN) {
-                viewModel.isShowHistory.value = true
+                viewModel.changeIsShowHistory(true)
                 viewModel.getAllHistory()
             }
             return@setOnTouchListener false
@@ -81,7 +81,7 @@ class SearchFragment : BaseFragment<FragmentSearchBinding, SearchViewModel>() {
         viewDataBinding.etBookSearchTitle.setOnEditorActionListener(object  : TextView.OnEditorActionListener {
             override fun onEditorAction(v: TextView?, actionId: Int, event: KeyEvent?): Boolean {
                 if(actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    viewModel.doSearchBooks(viewModel.searchKeyword.value)
+                    viewModel.doSearchBooks(viewModel.searchKeywordLiveData.value)
                     return true
                 }
                 return false
@@ -89,17 +89,14 @@ class SearchFragment : BaseFragment<FragmentSearchBinding, SearchViewModel>() {
         })
 
         // history insert/delete 후 리스트 변경될 때 마다 history 리스트 갱신
-        viewModel.historyList.observe(viewLifecycleOwner, Observer { keywords ->
+        viewModel.historyListLiveData.observe(viewLifecycleOwner) { keywords ->
             historyAdapter.submitList(keywords.orEmpty())
-        })
+        }
 
         // 검색 후 Search 버튼 누르면 book 리스트 새로고침
-        viewModel.searchKeyword.observe(viewLifecycleOwner, Observer { keyword ->
-//            if (keyword.equals("")) {
-//                Toast.makeText(context, "검색어를 입력해주세요.", Toast.LENGTH_SHORT).show()
-//            }
+        viewModel.searchKeywordLiveData.observe(viewLifecycleOwner) { keyword ->
             searchBookAdapter.refresh()
-        })
+        }
 
         lifecycleScope.launch {
             viewModel.searchPager.collectLatest { pagingData ->

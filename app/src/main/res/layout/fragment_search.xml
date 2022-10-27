@@ -41,7 +41,7 @@
             android:id="@+id/et_book_search_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@={viewmodel.searchKeyword}"
+            android:text="@={viewmodel.searchKeywordLiveData}"
             android:textSize="13dp"
             android:inputType="text"
             android:maxLines="1"
@@ -88,7 +88,7 @@
             app:layout_constraintTop_toBottomOf="@id/et_book_search_title"
             app:layout_constraintStart_toStartOf="@id/et_book_search_title"
             app:layout_constraintEnd_toEndOf="@id/et_book_search_title"
-            android:visibility="@{viewmodel.isShowHistory ? View.VISIBLE : View.GONE}"/>
+            android:visibility="@{viewmodel.isShowHistoryLiveData ? View.VISIBLE : View.GONE}"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -1,6 +1,7 @@
 package com.example.booksearchapp.ui.viewmodel
 
 import android.app.Application
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
@@ -18,9 +19,18 @@ class SearchViewModel(application: Application) : BaseViewModel(application) {
 
     private var keyword = ""
 
-    var searchKeyword: MutableLiveData<String> = MutableLiveData()
-    var isShowHistory: MutableLiveData<Boolean> = MutableLiveData()
-    var historyList: MutableLiveData<List<HistoryModel>> = MutableLiveData()
+    private val _searchKeywordLiveData = MutableLiveData<String>()
+    val searchKeywordLiveData: LiveData<String>
+        get() = _searchKeywordLiveData
+
+    private val _isShowHistoryLiveData = MutableLiveData<Boolean>()
+    val isShowHistoryLiveData: LiveData<Boolean>
+        get() = _isShowHistoryLiveData
+
+    private val _historyListLiveData = MutableLiveData<List<HistoryModel>>()
+    val historyListLiveData: LiveData<List<HistoryModel>>
+        get() = _historyListLiveData
+
 
     // Search Book 리스트 Pager
     val searchPager = Pager(PagingConfig(pageSize = 10)) {
@@ -28,13 +38,13 @@ class SearchViewModel(application: Application) : BaseViewModel(application) {
     }.flow.cachedIn(viewModelScope)
 
     init {
-        isShowHistory.value = false
+        _isShowHistoryLiveData.value = false
     }
 
     fun doSearchBooks(query: String?) {
         keyword = query ?: ""
-        searchKeyword.value = query ?: ""
-        isShowHistory.value = false
+        _searchKeywordLiveData.value = query ?: ""
+        _isShowHistoryLiveData.value = false
         insertHistory(HistoryModel(query ?: ""))
     }
 
@@ -44,7 +54,7 @@ class SearchViewModel(application: Application) : BaseViewModel(application) {
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe { historys ->
-                            historyList.value = historys.reversed()
+                            _historyListLiveData.value = historys.reversed()
                         }
         )
     }
@@ -69,5 +79,9 @@ class SearchViewModel(application: Application) : BaseViewModel(application) {
                             getAllHistory()
                         }
         )
+    }
+
+    fun changeIsShowHistory(isShowHistory: Boolean) {
+        _isShowHistoryLiveData.value = isShowHistory
     }
 }

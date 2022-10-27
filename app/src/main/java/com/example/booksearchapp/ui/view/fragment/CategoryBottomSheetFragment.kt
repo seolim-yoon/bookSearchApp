@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.booksearchapp.R
 import com.example.booksearchapp.databinding.LayoutCategoryBottomSheetBinding
@@ -52,12 +51,12 @@ class CategoryBottomSheetFragment() : BottomSheetDialogFragment() {
         }.attach()
 
         // OK 버튼 누르면 다이얼로그 dismiss
-        viewModel.dialogState.observe(viewLifecycleOwner, Observer { result ->
+        viewModel.dialogStateLiveData.observe(viewLifecycleOwner) { result ->
             if(result == StateResult.OK) {
-                viewModel.dialogState.value = StateResult.NONE
+                viewModel.changeDialogState(StateResult.NONE)
                 dismiss()
             }
-        })
+        }
     }
 
     override fun getTheme(): Int = R.style.CustomBottomSheetDialogTheme

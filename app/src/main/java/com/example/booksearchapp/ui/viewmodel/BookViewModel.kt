@@ -2,6 +2,7 @@ package com.example.booksearchapp.ui.viewmodel
 
 import android.app.Application
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
@@ -21,34 +22,55 @@ import io.reactivex.schedulers.Schedulers
 class BookViewModel(application: Application) : BaseViewModel(application) {
     private val bookRepository = BookRepository(application)
 
-    var currentCategoryId: MutableLiveData<String> = MutableLiveData()
-    var currentCategoryName: MutableLiveData<String> = MutableLiveData()
-    var currentSubCategoryName: MutableLiveData<String> = MutableLiveData()
+    private val _currentCategoryIdLiveData = MutableLiveData<String>()
+    val currentCategoryIdLiveData: LiveData<String>
+        get() = _currentCategoryIdLiveData
+
+    private val _currentCategoryNameLiveData = MutableLiveData<String>()
+    val currentCategoryNameLiveData: LiveData<String>
+        get() = _currentCategoryNameLiveData
+
+    private val _currentSubCategoryNameLiveData = MutableLiveData<String>()
+    val currentSubCategoryNameLiveData: LiveData<String>
+        get() = _currentSubCategoryNameLiveData
 
     // 다이얼로그 상태
-    var dialogState: MutableLiveData<StateResult> = MutableLiveData()
+    private val _dialogStateLiveData = MutableLiveData<StateResult>()
+    val dialogStateLiveData: LiveData<StateResult>
+        get() = _dialogStateLiveData
 
     // 선택된 Category
-    var selectCategory: MutableLiveData<String> = MutableLiveData()
+    private val _selectCategoryLiveData = MutableLiveData<String>()
+    val selectCategoryLiveData: LiveData<String>
+        get() = _selectCategoryLiveData
+
     // 선택된 SubCategory
-    var selectSubCategory: MutableLiveData<Category> = MutableLiveData()
+    private val _selectSubCategoryLiveData = MutableLiveData<Category>()
+    val selectSubCategoryLiveData: LiveData<Category>
+        get() = _selectSubCategoryLiveData
+
     // 선택된 Category + SubCategory = 서버에 요청할 카테고리 아이디
-    private var selectCategoryId: MutableLiveData<String> = MutableLiveData()
+    private val _selectCategoryIdLiveData = MutableLiveData<String>()
+    val selectCategoryIdLiveData: LiveData<String>
+        get() = _selectCategoryIdLiveData
+
     // Category 선택 시 SubCategory에 띄울 리스트
-    var subCategoryList: MutableLiveData<ArrayList<String>> = MutableLiveData()
+    private val _subCategoryListLiveData = MutableLiveData<ArrayList<String>>()
+    val subCategoryListLiveData: LiveData<ArrayList<String>>
+        get() = _subCategoryListLiveData
 
     init {
-        selectCategory.value = Category.ALL.domestic
-        selectSubCategory.value = Category.ALL
-        selectCategoryId.value = Category.ALL.domestic
-        subCategoryList.value = bookRepository.domesticList
+        _selectCategoryLiveData.value = Category.ALL.domestic
+        _selectSubCategoryLiveData.value = Category.ALL
+        _selectCategoryIdLiveData.value = Category.ALL.domestic
+        _subCategoryListLiveData.value = bookRepository.domesticList
         getBestSellerResult(Category.ALL.domestic)
     }
 
     // Home 화면 베스트셀러 Pager
     val bestSellerPager = Pager(PagingConfig(pageSize = 10)) {
         // Room DB에서 선택한 카테고리에 해당하는 책 리스트를 가져옴
-        bookRepository.getAllBestSellersByCategory(currentCategoryId.value ?: Category.ALL.domestic) as PagingSource<Int, BaseModel>
+        bookRepository.getAllBestSellersByCategory(_currentCategoryIdLiveData.value ?: Category.ALL.domestic) as PagingSource<Int, BaseModel>
     }.flow.cachedIn(viewModelScope)
 
     private fun getBestSellerResult(categoryId: String) {
@@ -82,14 +104,14 @@ class BookViewModel(application: Application) : BaseViewModel(application) {
                         .subscribe ({ name ->
                             val names = name[0].split(">")
                             if(names.size == 2) {
-                                currentCategoryName.value = names[0]
-                                currentSubCategoryName.value = names[1]
+                                _currentCategoryNameLiveData.value = names[0]
+                                _currentSubCategoryNameLiveData.value = names[1]
                             } else {
-                                currentCategoryName.value = names[0]
-                                currentSubCategoryName.value = "ALL"
+                                _currentCategoryNameLiveData.value = names[0]
+                                _currentSubCategoryNameLiveData.value = "ALL"
                             }
 
-                            currentCategoryId.value = selectCategoryId.value
+                            _currentCategoryIdLiveData.value = _selectCategoryIdLiveData.value
                         }, { e ->
                             Log.e("seolim", "error db : " + e.message)
 
@@ -98,15 +120,15 @@ class BookViewModel(application: Application) : BaseViewModel(application) {
     }
 
     fun onClickOK() {
-        getBestSellerResult(selectCategoryId.value ?: Category.ALL.domestic)
-        dialogState.value = StateResult.OK
+        getBestSellerResult(_selectCategoryIdLiveData.value ?: Category.ALL.domestic)
+        _dialogStateLiveData.value = StateResult.OK
     }
 
     fun selectCategoryInDialog(category: String) {
-        selectCategory.value = category
-        selectSubCategory.value = Category.ALL
-        selectCategoryId.value = category
-        subCategoryList.value = when (category) {
+        _selectCategoryLiveData.value = category
+        _selectSubCategoryLiveData.value = Category.ALL
+        _selectCategoryIdLiveData.value = category
+        _subCategoryListLiveData.value = when (category) {
             Category.ALL.domestic -> bookRepository.domesticList
             Category.ALL.foreign -> bookRepository.foreignList
             Category.ALL.record -> bookRepository.recordList
@@ -116,13 +138,18 @@ class BookViewModel(application: Application) : BaseViewModel(application) {
     }
 
     fun selectSubCategoryInDialog(subcategory: Category) {
-        selectSubCategory.value = subcategory
-        selectCategoryId.value = when (selectCategory.value) {
+        _selectSubCategoryLiveData.value = subcategory
+        _selectCategoryIdLiveData.value = when (_selectCategoryLiveData.value) {
             Category.ALL.domestic -> subcategory.domestic
             Category.ALL.foreign -> subcategory.foreign
             Category.ALL.record -> subcategory.record
             Category.ALL.dvd -> subcategory.dvd
             else -> subcategory.domestic
         }
+    }
+
+    fun changeDialogState(state: StateResult) {
+        _dialogStateLiveData.value = state
+
     }
 }
