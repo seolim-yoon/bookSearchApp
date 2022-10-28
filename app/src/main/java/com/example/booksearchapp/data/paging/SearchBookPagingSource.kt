@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.paging.PagingState
 import androidx.paging.rxjava2.RxPagingSource
 import com.example.booksearchapp.data.database.model.BaseModel
-import com.example.booksearchapp.data.response.transformSearchModel
+import com.example.booksearchapp.data.response.mapper.SearchMapper
 import com.example.booksearchapp.repository.SearchRepository
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
@@ -21,7 +21,7 @@ class SearchBookPagingSource(
             .subscribeOn(Schedulers.io())
             .map<LoadResult<Int, BaseModel>> { result ->
                 LoadResult.Page(
-                    data = result.transformSearchModel(),
+                    data = SearchMapper().map(result),
                     prevKey = null,
                     nextKey = if(keyword == "") null else nextPage + 1
                 )

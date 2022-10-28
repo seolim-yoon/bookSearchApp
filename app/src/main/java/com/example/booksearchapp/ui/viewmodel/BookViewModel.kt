@@ -10,29 +10,21 @@ import androidx.paging.PagingSource
 import androidx.paging.cachedIn
 import com.example.booksearchapp.base.BaseViewModel
 import com.example.booksearchapp.data.database.model.BaseModel
-import com.example.booksearchapp.data.database.model.BestSellerModel
 import com.example.booksearchapp.data.response.BestSellerResult
 import com.example.booksearchapp.data.response.mapper.BestSellerMapper
 import com.example.booksearchapp.repository.BookRepositoryImpl
 import com.example.booksearchapp.util.Category
 import com.example.booksearchapp.util.StateResult
-import com.skydoves.sandwich.onFailure
-import com.skydoves.sandwich.onSuccess
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class BookViewModel @Inject constructor(private val bookRepositoryImpl: BookRepositoryImpl) :
-    BaseViewModel() {
-    val PAGING_SIZE = 20
-    var currentPage = 0
+class BookViewModel @Inject constructor(private val bookRepositoryImpl: BookRepositoryImpl) : BaseViewModel() {
 
-    private val _bestSellerListLiveData = MutableLiveData<List<BestSellerModel>>()
-    val bestSellerListLiveData: LiveData<List<BestSellerModel>>
-        get() = _bestSellerListLiveData
+    // 선택된 Category + SubCategory = 서버에 요청할 카테고리 아이디
+    private var selectCategoryId = ""
 
     private val _currentCategoryIdLiveData = MutableLiveData<String>()
     val currentCategoryIdLiveData: LiveData<String>
@@ -61,22 +53,17 @@ class BookViewModel @Inject constructor(private val bookRepositoryImpl: BookRepo
     val selectSubCategoryLiveData: LiveData<Category>
         get() = _selectSubCategoryLiveData
 
-    // 선택된 Category + SubCategory = 서버에 요청할 카테고리 아이디
-    private val _selectCategoryIdLiveData = MutableLiveData<String>()
-    val selectCategoryIdLiveData: LiveData<String>
-        get() = _selectCategoryIdLiveData
-
     // Category 선택 시 SubCategory에 띄울 리스트
     private val _subCategoryListLiveData = MutableLiveData<ArrayList<String>>()
     val subCategoryListLiveData: LiveData<ArrayList<String>>
         get() = _subCategoryListLiveData
 
     init {
+        selectCategoryId = Category.ALL.domestic
         _selectCategoryLiveData.value = Category.ALL.domestic
         _selectSubCategoryLiveData.value = Category.ALL
-        _selectCategoryIdLiveData.value = Category.ALL.domestic
         _subCategoryListLiveData.value = bookRepositoryImpl.domesticList
-        getBestSellerResult(Category.ALL.domestic, currentPage, PAGING_SIZE)
+        getBestSellerResult(Category.ALL.domestic)
     }
 
     // Home 화면 베스트셀러 Pager
@@ -85,17 +72,17 @@ class BookViewModel @Inject constructor(private val bookRepositoryImpl: BookRepo
         bookRepositoryImpl.getAllBestSellersByCategory(_currentCategoryIdLiveData.value ?: Category.ALL.domestic) as PagingSource<Int, BaseModel>
     }.flow.cachedIn(viewModelScope)
 
-    fun getBestSellerResult(categoryId: String, start: Int, maxResults: Int) {
-        viewModelScope.launch {
-            bookRepositoryImpl.getBestSellerResult(categoryId, start, maxResults)
-                .onSuccess {
-                    _bestSellerListLiveData.postValue(BestSellerMapper().map(this.data))
-                    insertAllBestSeller(this.data, categoryId)
-                }
-                .onFailure {
-                    Log.e("seolim", "error : $this")
-                }
-        }
+    private fun getBestSellerResult(categoryId: String) {
+        addDisposable(
+            bookRepositoryImpl.getBestSellerResult(categoryId)
+                .subscribeOn(Schedulers.io())
+                .subscribe({ modelList ->
+                    hideLoadingAnimation()
+                    insertAllBestSeller(modelList, categoryId)
+                }, { e ->
+                    Log.e("seolim", "error : " + e.message)
+                })
+        )
     }
 
     private fun insertAllBestSeller(modelList: BestSellerResult, categoryId: String) {
@@ -117,6 +104,7 @@ class BookViewModel @Inject constructor(private val bookRepositoryImpl: BookRepo
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ name ->
+                    Log.i("seolim", "name : " + name)
                     val names = name[0].split(">")
                     if (names.size == 2) {
                         _currentCategoryNameLiveData.value = names[0]
@@ -126,7 +114,7 @@ class BookViewModel @Inject constructor(private val bookRepositoryImpl: BookRepo
                         _currentSubCategoryNameLiveData.value = "ALL"
                     }
 
-                    _currentCategoryIdLiveData.value = _selectCategoryIdLiveData.value
+                    _currentCategoryIdLiveData.value = selectCategoryId
                 }, { e ->
                     Log.e("seolim", "error db : " + e.message)
                 })
@@ -134,15 +122,15 @@ class BookViewModel @Inject constructor(private val bookRepositoryImpl: BookRepo
     }
 
     fun onClickOK() {
-        currentPage = 0
-        getBestSellerResult(_selectCategoryIdLiveData.value ?: Category.ALL.domestic, currentPage, PAGING_SIZE)
+        showLoadingAnimation()
+        getBestSellerResult(selectCategoryId)
         _dialogStateLiveData.value = StateResult.OK
     }
 
     fun selectCategoryInDialog(category: String) {
+        selectCategoryId = category
         _selectCategoryLiveData.value = category
         _selectSubCategoryLiveData.value = Category.ALL
-        _selectCategoryIdLiveData.value = category
         _subCategoryListLiveData.value = when (category) {
             Category.ALL.domestic -> bookRepositoryImpl.domesticList
             Category.ALL.foreign -> bookRepositoryImpl.foreignList
@@ -154,7 +142,7 @@ class BookViewModel @Inject constructor(private val bookRepositoryImpl: BookRepo
 
     fun selectSubCategoryInDialog(subcategory: Category) {
         _selectSubCategoryLiveData.value = subcategory
-        _selectCategoryIdLiveData.value = when (_selectCategoryLiveData.value) {
+        selectCategoryId = when (_selectCategoryLiveData.value) {
             Category.ALL.domestic -> subcategory.domestic
             Category.ALL.foreign -> subcategory.foreign
             Category.ALL.record -> subcategory.record

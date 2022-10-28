@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.activityViewModels
 import com.example.booksearchapp.R
 import com.example.booksearchapp.databinding.LayoutCategoryBottomSheetBinding
 import com.example.booksearchapp.ui.adapter.CategoryFragmentStateAdapter
@@ -19,12 +19,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class CategoryBottomSheetFragment() : BottomSheetDialogFragment() {
     private lateinit var binding: LayoutCategoryBottomSheetBinding
-    private val viewModel: BookViewModel by lazy {
-        ViewModelProvider(
-                requireActivity(),
-                ViewModelProvider.AndroidViewModelFactory(requireActivity().application)
-        ).get(BookViewModel::class.java)
-    }
+    private val viewModel: BookViewModel by activityViewModels()
 
     // bottom sheet dialog에서 사용할 Fragment 리스트 (CategoryFragment/SubCategoryFragment)
     private val fragmentList = listOf<Fragment>(CategoryFragment(), SubCategoryFragment())
@@ -44,7 +39,6 @@ class CategoryBottomSheetFragment() : BottomSheetDialogFragment() {
     private fun initView() {
         binding.vpCategory.adapter = categoryAdapter
 
-        // tablayout이랑 viewpager 연결
         TabLayoutMediator(binding.tabLayout, binding.vpCategory) {tab, position ->
             when(position) {
                 0 -> tab.text = "Category"

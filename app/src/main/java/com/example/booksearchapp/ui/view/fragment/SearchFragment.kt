@@ -1,13 +1,12 @@
 package com.example.booksearchapp.ui.view.fragment
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.booksearchapp.R
 import com.example.booksearchapp.base.BaseFragment
@@ -22,9 +21,7 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class SearchFragment : BaseFragment<FragmentSearchBinding, SearchViewModel>() {
     override val layoutResID: Int = R.layout.fragment_search
-    override val viewModel: SearchViewModel by viewModels()
-
-    var searchKeyword = ""
+    override val viewModel: SearchViewModel by activityViewModels()
 
     private val searchBookAdapter by lazy {
         BookListPagingAdapter {
@@ -47,57 +44,54 @@ class SearchFragment : BaseFragment<FragmentSearchBinding, SearchViewModel>() {
         super.onViewCreated(view, savedInstanceState)
         viewDataBinding.viewmodel = viewModel
         initView()
+        initObserver()
     }
 
-    @SuppressLint("ClickableViewAccessibility")
     private fun initView() {
-        with(viewDataBinding.rvBookSearchList) {
-            adapter = searchBookAdapter
-        }
-
-        with(viewDataBinding.rvBookHistoryList) {
-            adapter = historyAdapter
-        }
-
-        // swipe할 때 마다 리스트 새로고침
-        with(viewDataBinding.slSwipeRefresh) {
-            setOnRefreshListener {
+        with(viewDataBinding) {
+            rvBookSearchList.adapter = searchBookAdapter
+            rvBookHistoryList.adapter = historyAdapter
+            slSwipeRefresh.setOnRefreshListener {
                 searchBookAdapter.refresh()
-                isRefreshing = false
+                slSwipeRefresh.isRefreshing = false
             }
-        }
 
-        viewDataBinding.etBookSearchTitle.setOnTouchListener { v, event ->
-            if(event.action == MotionEvent.ACTION_DOWN) {
-                viewModel.changeIsShowHistory(true)
-                viewModel.getAllHistory()
-            }
-            return@setOnTouchListener false
-        }
-
-        viewDataBinding.etBookSearchTitle.setOnEditorActionListener(object  : TextView.OnEditorActionListener {
-            override fun onEditorAction(v: TextView?, actionId: Int, event: KeyEvent?): Boolean {
-                if(actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    viewModel.doSearchBooks(viewModel.searchKeywordLiveData.value)
-                    return true
+            etBookSearchTitle.setOnTouchListener { v, event ->
+                if(event.action == MotionEvent.ACTION_DOWN) {
+                    viewModel.changeIsShowHistory(true)
+                    viewModel.getAllHistory()
                 }
-                return false
+                return@setOnTouchListener false
             }
-        })
 
-        // history insert/delete 후 리스트 변경될 때 마다 history 리스트 갱신
-        viewModel.historyListLiveData.observe(viewLifecycleOwner) { keywords ->
-            historyAdapter.submitList(keywords.orEmpty())
+            etBookSearchTitle.setOnEditorActionListener(object  : TextView.OnEditorActionListener {
+                override fun onEditorAction(v: TextView?, actionId: Int, event: KeyEvent?): Boolean {
+                    if(actionId == EditorInfo.IME_ACTION_SEARCH) {
+                        viewModel.doSearchBooks(viewModel.searchKeywordLiveData.value)
+                        return true
+                    }
+                    return false
+                }
+            })
         }
+    }
 
-        // 검색 후 Search 버튼 누르면 book 리스트 새로고침
-        viewModel.searchKeywordLiveData.observe(viewLifecycleOwner) { keyword ->
-            searchBookAdapter.refresh()
-        }
+    private fun initObserver() {
+        with(viewModel) {
+            // history insert/delete 후 리스트 변경될 때 마다 history 리스트 갱신
+            historyListLiveData.observe(viewLifecycleOwner) { keywords ->
+                historyAdapter.submitList(keywords.orEmpty())
+            }
 
-        lifecycleScope.launch {
-            viewModel.searchPager.collectLatest { pagingData ->
-                searchBookAdapter.submitData(pagingData)
+            // 검색 후 Search 버튼 누르면 book 리스트 새로고침
+            searchKeywordLiveData.observe(viewLifecycleOwner) { keyword ->
+                searchBookAdapter.refresh()
+            }
+
+            lifecycleScope.launch {
+                searchPager.collectLatest { pagingData ->
+                    searchBookAdapter.submitData(pagingData)
+                }
             }
         }
     }

@@ -1,5 +1,6 @@
 package com.example.booksearchapp.data.database.dao
 
+import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -11,7 +12,7 @@ import io.reactivex.Single
 @Dao
 interface BookDao {
     @Query("SELECT * FROM BestSeller WHERE categoryId LIKE :categoryId ORDER BY rank ASC")
-    fun getAllBestSellersByCategory(categoryId: String): Single<List<String>>
+    fun getAllBestSellersByCategory(categoryId: String): PagingSource<Int, BestSellerModel>
 
     @Query("SELECT categoryName FROM BestSeller WHERE categoryId LIKE :categoryId")
     fun getBestSellersCategory(categoryId: String): Single<List<String>>

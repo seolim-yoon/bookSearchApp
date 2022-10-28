@@ -1,11 +1,11 @@
 package com.example.booksearchapp.repository
 
+import androidx.paging.PagingSource
 import com.example.booksearchapp.base.BaseRepository
 import com.example.booksearchapp.data.BookService
 import com.example.booksearchapp.data.database.dao.BookDao
 import com.example.booksearchapp.data.database.model.BestSellerModel
 import com.example.booksearchapp.data.response.BestSellerResult
-import com.skydoves.sandwich.ApiResponse
 import io.reactivex.Completable
 import io.reactivex.Single
 import javax.inject.Inject
@@ -16,11 +16,11 @@ class BookRepositoryImpl @Inject constructor(private val bookDao: BookDao, priva
     val recordList = arrayListOf("ALL", "가요", "Pop", "Rock", "J.POP", "월드뮤직", "Jazz", "클래식", "국악", "뉴에이지", "O.S.T")
     val dvdList = arrayListOf("ALL", "애니메이션", "영화", "블루레이", "유아동/교육 DVD", "", "", "", "", "", "")
 
-    override fun getBestSellerResult(categoryId: String, start: Int, maxResults: Int): ApiResponse<BestSellerResult> = bookService.getBestSellerBooks(key, categoryId, start, maxResults)
+    override fun getBestSellerResult(categoryId: String): Single<BestSellerResult> = bookService.getBestSellerBooks(key, categoryId)
 
     override fun insertAllBestSeller(bestSellerModels: List<BestSellerModel>) : Completable = bookDao.insertAllBestSeller(bestSellerModels)
 
-    override fun getAllBestSellersByCategory(categoryId: String) : Single<List<String>> = bookDao.getAllBestSellersByCategory(categoryId)
+    override fun getAllBestSellersByCategory(categoryId: String) : PagingSource<Int, BestSellerModel> = bookDao.getAllBestSellersByCategory(categoryId)
 
     override fun getBestSellersCategory(categoryId: String) : Single<List<String>> = bookDao.getBestSellersCategory(categoryId)
 }

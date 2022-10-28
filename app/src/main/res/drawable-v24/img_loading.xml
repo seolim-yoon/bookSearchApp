@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animation-list android:oneshot="false"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/baseline_import_contacts_24"
+        android:duration="300" />
+    <item android:drawable="@drawable/baseline_auto_stories_24"
+        android:duration="300" />
+    <item android:drawable="@drawable/baseline_menu_book_24"
+        android:duration="300" />
+</animation-list>

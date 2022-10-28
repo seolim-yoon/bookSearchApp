@@ -10,7 +10,6 @@ import com.example.booksearchapp.base.BaseActivity
 import com.example.booksearchapp.databinding.ActivityMainBinding
 import com.example.booksearchapp.ui.viewmodel.BookViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import org.jetbrains.anko.toast
 
 @AndroidEntryPoint
 class MainActivity : BaseActivity<ActivityMainBinding, BookViewModel>() {
@@ -42,7 +41,6 @@ class MainActivity : BaseActivity<ActivityMainBinding, BookViewModel>() {
     override fun onBackPressed() {
         if (System.currentTimeMillis() > backKeyPressedTime + TIME_INTERVAL) {
             backKeyPressedTime = System.currentTimeMillis()
-            toast("뒤로 버튼을 한번 더 누르시면 종료됩니다.")
         } else {
             finish()
         }
