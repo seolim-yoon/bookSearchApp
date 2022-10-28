@@ -8,7 +8,7 @@
   + Recyclerview
   + ViewPager2
   + MVVM
-  +- Databinding
+  + Databinding
   + LiveData
   + ViewModel
   + Room
@@ -20,6 +20,7 @@
   + BottomSheetFragment
   + Open API(Interpark) 사용 ( http://book.interpark.com/blog/bookpinion/bookpinionOpenAPIInfo.rdo)
   + Glide
+  + Hilt
 
 * 프로젝트 구조
 
