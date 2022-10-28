@@ -24,10 +24,10 @@ open class BaseViewModel: ViewModel() {
     }
 
     open fun showLoadingAnimation() {
-        _isVisibleLoadingLiveData.value = true
+        _isVisibleLoadingLiveData.postValue(true)
     }
 
     open fun hideLoadingAnimation() {
-        _isVisibleLoadingLiveData.value = false
+        _isVisibleLoadingLiveData.postValue(false)
     }
 }

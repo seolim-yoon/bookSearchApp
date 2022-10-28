@@ -41,7 +41,9 @@ class SearchViewModel @Inject constructor(private val searchRepositoryImpl: Sear
     }
 
     fun doSearchBooks(query: String?) {
+        showLoadingAnimation()
         keyword = query ?: ""
+        _searchKeywordLiveData.value = query ?: ""
         _isShowHistoryLiveData.value = false
         insertHistory(HistoryModel(query ?: ""))
     }

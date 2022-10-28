@@ -6,8 +6,10 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
+import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.example.booksearchapp.R
 import com.example.booksearchapp.base.BaseFragment
 import com.example.booksearchapp.databinding.FragmentSearchBinding
@@ -24,8 +26,8 @@ class SearchFragment : BaseFragment<FragmentSearchBinding, SearchViewModel>() {
     override val viewModel: SearchViewModel by activityViewModels()
 
     private val searchBookAdapter by lazy {
-        BookListPagingAdapter {
-            // TODO : 검색한 도서 아이템 클릭 시 동작 구현 (Detail)
+        BookListPagingAdapter { model ->
+            findNavController().navigate(R.id.action_searchFragment_to_detailFragment, bundleOf("BestSellerModel" to model))
         }
     }
 
