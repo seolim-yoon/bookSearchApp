@@ -1,15 +1,16 @@
 package com.example.booksearchapp.ui.view.fragment
 
+import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
-import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import com.example.booksearchapp.R
 import com.example.booksearchapp.base.BaseFragment
 import com.example.booksearchapp.databinding.FragmentSearchBinding
@@ -27,7 +28,7 @@ class SearchFragment : BaseFragment<FragmentSearchBinding, SearchViewModel>() {
 
     private val searchBookAdapter by lazy {
         BookListPagingAdapter { model ->
-            findNavController().navigate(R.id.action_searchFragment_to_detailFragment, bundleOf("BestSellerModel" to model))
+//            findNavController().navigate(R.id.action_searchFragment_to_detailFragment, bundleOf("SearchModel" to model))
         }
     }
 
@@ -36,6 +37,7 @@ class SearchFragment : BaseFragment<FragmentSearchBinding, SearchViewModel>() {
             // 이전 검색 기록 클릭
             viewModel.changeIsShowHistory(false)
             viewModel.doSearchBooks(selectHistory.keyword)
+            hideKeyboard()
         }, { deleteHistory ->
             // 이전 검색 기록 삭제 버튼 클릭
             viewModel.deleteHistory(deleteHistory.keyword)
@@ -68,8 +70,9 @@ class SearchFragment : BaseFragment<FragmentSearchBinding, SearchViewModel>() {
 
             etBookSearchTitle.setOnEditorActionListener(object  : TextView.OnEditorActionListener {
                 override fun onEditorAction(v: TextView?, actionId: Int, event: KeyEvent?): Boolean {
-                    if(actionId == EditorInfo.IME_ACTION_SEARCH) {
-                        viewModel.doSearchBooks(viewModel.searchKeywordLiveData.value)
+                    if(actionId == EditorInfo.IME_ACTION_DONE) {
+                        viewModel.doSearchBooks(v?.text.toString())
+                        hideKeyboard()
                         return true
                     }
                     return false
@@ -96,5 +99,10 @@ class SearchFragment : BaseFragment<FragmentSearchBinding, SearchViewModel>() {
                 }
             }
         }
+    }
+
+    private fun hideKeyboard() {
+        val imm = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(viewDataBinding.etBookSearchTitle.windowToken, 0)
     }
 }

@@ -1,5 +1,6 @@
 package com.example.booksearchapp.ui.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -41,7 +42,6 @@ class SearchViewModel @Inject constructor(private val searchRepositoryImpl: Sear
     }
 
     fun doSearchBooks(query: String?) {
-        showLoadingAnimation()
         keyword = query ?: ""
         _searchKeywordLiveData.value = query ?: ""
         _isShowHistoryLiveData.value = false

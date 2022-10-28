@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:tools="http://schemas.android.com/tools">
     <data>
         <import type="android.view.View"/>
         <variable
@@ -46,7 +46,7 @@
             android:maxLines="1"
             android:hint="검색어를 입력해주세요."
             android:textColorHint="@color/gray"
-            android:imeOptions="actionSearch"
+            android:imeOptions="actionDone"
             android:textCursorDrawable="@color/colorPrimary"
             android:background="@drawable/bg_et_book_search"
             android:layout_marginStart="20dp"
@@ -88,6 +88,18 @@
             app:layout_constraintStart_toStartOf="@id/et_book_search_title"
             app:layout_constraintEnd_toEndOf="@id/et_book_search_title"
             android:visibility="@{viewmodel.isShowHistoryLiveData ? View.VISIBLE : View.GONE}"/>
+
+        <ProgressBar
+            android:id="@+id/pb_loading"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:visibility="gone"
+            android:indeterminateDrawable="@drawable/img_loading"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:visibility="visible"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

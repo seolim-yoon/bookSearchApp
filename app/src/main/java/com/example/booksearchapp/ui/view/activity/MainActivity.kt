@@ -2,6 +2,8 @@ package com.example.booksearchapp.ui.view.activity
 
 import android.os.Bundle
 import android.view.View
+import androidx.activity.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
@@ -14,10 +16,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainActivity : BaseActivity<ActivityMainBinding, BookViewModel>() {
     override val layoutResID: Int = R.layout.activity_main
-    override val viewModel: BookViewModel  by lazy {
-        ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory(application)).get(BookViewModel::class.java)
-    }
-
+    override val viewModel: BookViewModel by viewModels()
     private val TIME_INTERVAL = 2000
     private var backKeyPressedTime = 0L
 
