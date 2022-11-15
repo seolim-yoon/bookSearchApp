@@ -9,9 +9,11 @@ import retrofit2.Response
 interface BookDataSource {
     suspend fun getBestSellerResult(categoryId: String): Flow<BestSellerResult>
 
+    suspend fun getBestSellersCategory(categoryId: String): Flow<List<String>>
+
+    suspend fun getSelectBestSeller(rank: Int): Flow<BestSellerModel>
+
     suspend fun insertAllBestSeller(bestSellerModels: List<BestSellerModel>): Flow<Unit>
 
     fun getAllBestSellersByCategory(categoryId: String): PagingSource<Int, BestSellerModel>
-
-    suspend fun getBestSellersCategory(categoryId: String): Flow<List<String>>
 }

@@ -17,9 +17,11 @@ class BookRepositoryImpl @Inject constructor(private val bookDataSource: BookDat
 
     override suspend fun getBestSellerResult(categoryId: String): Flow<BestSellerResult> = bookDataSource.getBestSellerResult(categoryId)
 
+    override suspend fun getBestSellersCategory(categoryId: String) : Flow<List<String>> = bookDataSource.getBestSellersCategory(categoryId)
+
+    override suspend fun getSelectBestSeller(rank: Int): Flow<BestSellerModel> = bookDataSource.getSelectBestSeller(rank)
+
     override suspend fun insertAllBestSeller(bestSellerModels: List<BestSellerModel>): Flow<Unit> = bookDataSource.insertAllBestSeller(bestSellerModels)
 
     override fun getAllBestSellersByCategory(categoryId: String) : PagingSource<Int, BestSellerModel> = bookDataSource.getAllBestSellersByCategory(categoryId)
-
-    override suspend fun getBestSellersCategory(categoryId: String) : Flow<List<String>> = bookDataSource.getBestSellersCategory(categoryId)
 }

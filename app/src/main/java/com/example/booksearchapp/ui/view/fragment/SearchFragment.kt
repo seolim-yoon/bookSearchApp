@@ -26,7 +26,7 @@ class SearchFragment : BaseFragment<FragmentSearchBinding, SearchViewModel>() {
     override val viewModel: SearchViewModel by activityViewModels()
 
     private val searchBookAdapter by lazy {
-        BookListPagingAdapter { model ->
+        BookListPagingAdapter { position ->
 //            findNavController().navigate(R.id.action_searchFragment_to_detailFragment, bundleOf("SearchModel" to model))
         }
     }

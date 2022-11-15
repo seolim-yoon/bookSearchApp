@@ -10,9 +10,11 @@ import com.example.booksearchapp.data.database.model.BestSellerModel
 import com.example.booksearchapp.data.database.model.SearchModel
 import com.example.booksearchapp.databinding.ItemBookListBinding
 import com.example.booksearchapp.databinding.ItemBookSearchListBinding
+import com.example.booksearchapp.ui.view.holder.BestSellerPagingItemViewHolder
+import com.example.booksearchapp.ui.view.holder.SearchPagingItemViewHolder
 
 class BookListPagingAdapter(
-    private var bookItemClick: (BaseModel) -> Unit
+    private var bookItemClick: (Int) -> Unit
 ) : PagingDataAdapter<BaseModel, RecyclerView.ViewHolder>(diffCallback){
     private val VIEW_TYPE_BEST_SELLER = 0
     private val VIEW_TYPE_SEARCH = 1
@@ -40,17 +42,17 @@ class BookListPagingAdapter(
                 VIEW_TYPE_BEST_SELLER -> {
                     val layoutInflater = LayoutInflater.from(parent.context)
                     val binding = ItemBookListBinding.inflate(layoutInflater, parent, false)
-                    BestSellerPagingItemViewHolder(binding)
+                    BestSellerPagingItemViewHolder(binding, bookItemClick)
                 }
                 VIEW_TYPE_SEARCH -> {
                     val layoutInflater = LayoutInflater.from(parent.context)
                     val binding = ItemBookSearchListBinding.inflate(layoutInflater, parent, false)
-                    SearchPagingItemViewHolder(binding)
+                    SearchPagingItemViewHolder(binding, bookItemClick)
                 }
                 else -> {
                     val layoutInflater = LayoutInflater.from(parent.context)
                     val binding = ItemBookListBinding.inflate(layoutInflater, parent, false)
-                    BestSellerPagingItemViewHolder(binding)
+                    BestSellerPagingItemViewHolder(binding, bookItemClick)
                 }
             }
 
@@ -68,28 +70,6 @@ class BookListPagingAdapter(
             is BestSellerModel -> VIEW_TYPE_BEST_SELLER
             is SearchModel -> VIEW_TYPE_SEARCH
             else -> VIEW_TYPE_BEST_SELLER
-        }
-    }
-
-    inner class BestSellerPagingItemViewHolder(private val binding: ItemBookListBinding): RecyclerView.ViewHolder(binding.root) {
-        fun bind(bestseller: BestSellerModel) {
-            binding.bestseller = bestseller
-            binding.executePendingBindings()
-
-            itemView.setOnClickListener {
-                bookItemClick(bestseller)
-            }
-        }
-    }
-
-    inner class SearchPagingItemViewHolder(private val binding: ItemBookSearchListBinding): RecyclerView.ViewHolder(binding.root) {
-        fun bind(search: SearchModel) {
-            binding.search = search
-            binding.executePendingBindings()
-
-            itemView.setOnClickListener {
-                bookItemClick(search)
-            }
         }
     }
 }

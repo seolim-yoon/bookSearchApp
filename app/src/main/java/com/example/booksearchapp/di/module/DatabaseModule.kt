@@ -21,6 +21,7 @@ class DatabaseModule {
         @ApplicationContext context: Context
     ): AppDatabase = Room
         .databaseBuilder(context, AppDatabase::class.java, "book_db.db")
+        .fallbackToDestructiveMigration()
         .build()
 
     @Singleton

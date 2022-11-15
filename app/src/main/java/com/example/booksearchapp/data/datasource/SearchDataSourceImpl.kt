@@ -15,9 +15,7 @@ class SearchDataSourceImpl @Inject constructor(private val historyDao: HistoryDa
     override suspend fun searchBooksByName(keyword: String, page: Int) : Response<SearchResult> = bookService.searchBooksByName(key, keyword, page)
 
     override suspend fun getAllHistory() : Flow<List<HistoryModel>> = flow {
-        while (true) {
-            emit(historyDao.getAllHistory())
-        }
+        emit(historyDao.getAllHistory())
     }
 
     override suspend fun insertHistory(history: HistoryModel) = historyDao.insertHistory(history)

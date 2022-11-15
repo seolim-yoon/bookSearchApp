@@ -3,6 +3,7 @@ package com.example.booksearchapp.data.paging
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.example.booksearchapp.data.database.model.BaseModel
+import com.example.booksearchapp.data.database.model.SearchModel
 import com.example.booksearchapp.data.response.mapper.SearchMapper
 import com.example.booksearchapp.repository.SearchRepository
 import kotlinx.coroutines.Dispatchers
@@ -10,7 +11,7 @@ import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 import java.io.IOException
 
-class SearchBookPagingSource(
+class SearchBookPagingSource (
     private val repository: SearchRepository,
     private val keyword: String
 ) : PagingSource<Int, BaseModel>() {
@@ -24,15 +25,10 @@ class SearchBookPagingSource(
                 repository.searchBooksByName(keyword, nextPage)
             }
 
-            val bookList = SearchMapper().map(response.body())
-
-            val prevKey = null
-            val nextKey = if(keyword == "") null else nextPage + 1
-
             LoadResult.Page(
-                data = bookList ?: listOf(),
-                prevKey = prevKey,
-                nextKey = nextKey
+                data = SearchMapper().map(response.body()) ?: listOf(),
+                prevKey = null,
+                nextKey = if(keyword == "") null else nextPage + 1
             )
 
         } catch (exception: IOException) {

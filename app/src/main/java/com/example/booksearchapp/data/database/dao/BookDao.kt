@@ -19,6 +19,9 @@ interface BookDao {
     @Query("SELECT categoryName FROM BestSeller WHERE categoryId LIKE :categoryId")
     suspend fun getBestSellersCategory(categoryId: String): List<String>
 
+    @Query("SELECT * FROM BestSeller WHERE rank LIKE :rank + 1")
+    suspend fun getSelectBestSeller(rank: Int): BestSellerModel
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAllBestSeller(bestSellerModels: List<BestSellerModel>)
 }

@@ -1,6 +1,7 @@
 package com.example.booksearchapp.ui.view.fragment
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
@@ -21,8 +22,8 @@ class ListFragment : BaseFragment<FragmentListBinding, BookViewModel>() {
     override val viewModel: BookViewModel by activityViewModels()
 
     private val bookAdapter by lazy {
-        BookListPagingAdapter { model ->
-            findNavController().navigate(R.id.action_listFragment_to_detailFragment, bundleOf("BestSellerModel" to model))
+        BookListPagingAdapter { position ->
+            viewModel.getSelectBestSeller(position)
         }
     }
 
@@ -36,6 +37,7 @@ class ListFragment : BaseFragment<FragmentListBinding, BookViewModel>() {
     private fun initView() {
         with(viewDataBinding) {
             rvBookList.adapter = bookAdapter
+
             slSwipeRefresh.setOnRefreshListener {
                 bookAdapter.refresh()
                 slSwipeRefresh.isRefreshing = false
@@ -60,6 +62,10 @@ class ListFragment : BaseFragment<FragmentListBinding, BookViewModel>() {
                     true -> viewDataBinding.pbLoading.visibility = View.VISIBLE
                     false -> viewDataBinding.pbLoading.visibility = View.GONE
                 }
+            }
+
+            selectModelLiveData.observe(viewLifecycleOwner) { model ->
+                findNavController().navigate(R.id.action_listFragment_to_detailFragment, bundleOf("BestSellerModel" to model))
             }
 
             lifecycleScope.launch {

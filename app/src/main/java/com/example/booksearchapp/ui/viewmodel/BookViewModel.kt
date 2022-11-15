@@ -1,5 +1,6 @@
 package com.example.booksearchapp.ui.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -13,16 +14,16 @@ import com.example.booksearchapp.data.database.model.BestSellerModel
 import com.example.booksearchapp.data.response.mapper.BestSellerMapper
 import com.example.booksearchapp.repository.BookRepository
 import com.example.booksearchapp.util.Category
+import com.example.booksearchapp.util.SingleLiveEvent
 import com.example.booksearchapp.util.StateResult
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class BookViewModel @Inject constructor(private val bookRepository: BookRepository) : BaseViewModel() {
+class BookViewModel @Inject constructor(private val bookRepository: BookRepository) :
+    BaseViewModel() {
 
     // 선택된 Category + SubCategory = 서버에 요청할 카테고리 아이디
     private var selectCategoryId = ""
@@ -59,6 +60,17 @@ class BookViewModel @Inject constructor(private val bookRepository: BookReposito
     val subCategoryListLiveData: LiveData<ArrayList<String>>
         get() = _subCategoryListLiveData
 
+    // 리스트 아이템 클릭 시 화면 전환에 필요한 BestSellerModel
+    private val _selectModelLiveData = SingleLiveEvent<BestSellerModel>()
+    val selectModelLiveData: SingleLiveEvent<BestSellerModel>
+        get() = _selectModelLiveData
+
+    val bestSellerPager = Pager(PagingConfig(pageSize = 10)) {
+        bookRepository.getAllBestSellersByCategory(
+            _currentCategoryIdLiveData.value ?: Category.ALL.domestic
+        ) as PagingSource<Int, BaseModel>
+    }.flow.cachedIn(viewModelScope)
+
     init {
         selectCategoryId = Category.ALL.domestic
         _selectCategoryLiveData.value = Category.ALL.domestic
@@ -67,25 +79,11 @@ class BookViewModel @Inject constructor(private val bookRepository: BookReposito
         getBestSellerResult(Category.ALL.domestic)
     }
 
-    // Home 화면 베스트셀러 Pager
-    val bestSellerPager = Pager(PagingConfig(pageSize = 10)) {
-        // Room DB에서 선택한 카테고리에 해당하는 책 리스트를 가져옴
-        bookRepository.getAllBestSellersByCategory(_currentCategoryIdLiveData.value ?: Category.ALL.domestic) as PagingSource<Int, BaseModel>
-    }.flow.cachedIn(viewModelScope)
-
     private fun getBestSellerResult(categoryId: String) {
         viewModelScope.launch {
             bookRepository.getBestSellerResult(categoryId).collectLatest { bookResult ->
                 hideLoadingAnimation()
                 insertAllBestSeller(BestSellerMapper().map(bookResult) ?: listOf(), categoryId)
-            }
-        }
-    }
-
-    private fun insertAllBestSeller(modelList: List<BestSellerModel>, categoryId: String) {
-        viewModelScope.launch {
-            bookRepository.insertAllBestSeller(modelList).collectLatest {
-                getBestSellerCategory(categoryId)
             }
         }
     }
@@ -104,6 +102,22 @@ class BookViewModel @Inject constructor(private val bookRepository: BookReposito
                 }
 
                 _currentCategoryIdLiveData.value = selectCategoryId
+            }
+        }
+    }
+
+    private fun insertAllBestSeller(modelList: List<BestSellerModel>, categoryId: String) {
+        viewModelScope.launch {
+            bookRepository.insertAllBestSeller(modelList).collectLatest {
+                getBestSellerCategory(categoryId)
+            }
+        }
+    }
+
+    fun getSelectBestSeller(position: Int) {
+        viewModelScope.launch {
+            bookRepository.getSelectBestSeller(position).collectLatest { bestSellerModel ->
+                _selectModelLiveData.value = bestSellerModel
             }
         }
     }
