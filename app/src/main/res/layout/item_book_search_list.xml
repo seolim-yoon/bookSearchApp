@@ -3,7 +3,7 @@
     <data>
         <variable
             name="search"
-            type="com.example.booksearchapp.data.database.model.SearchModel" />
+            type="com.example.booksearchapp.model.database.dto.SearchModel" />
     </data>
     <androidx.cardview.widget.CardView
         xmlns:android="http://schemas.android.com/apk/res/android"

@@ -3,7 +3,7 @@
     <data>
         <variable
             name="bestseller"
-            type="com.example.booksearchapp.data.database.model.BestSellerModel" />
+            type="com.example.booksearchapp.model.database.dto.BestSellerModel" />
     </data>
     <androidx.cardview.widget.CardView
         xmlns:android="http://schemas.android.com/apk/res/android"

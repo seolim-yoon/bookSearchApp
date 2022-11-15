@@ -4,7 +4,7 @@
         <import type="android.view.View"/>
         <variable
             name="viewmodel"
-            type="com.example.booksearchapp.ui.viewmodel.SearchViewModel" />
+            type="com.example.booksearchapp.feature.search.SearchViewModel" />
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"

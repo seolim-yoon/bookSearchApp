@@ -1,12 +1,9 @@
 package com.example.booksearchapp.repository
 
 import androidx.paging.PagingSource
-import com.example.booksearchapp.data.database.model.BestSellerModel
-import com.example.booksearchapp.data.response.BestSellerResult
-import io.reactivex.Completable
-import io.reactivex.Single
+import com.example.booksearchapp.model.database.dto.BestSellerModel
+import com.example.booksearchapp.model.network.response.BestSellerResponse
 import kotlinx.coroutines.flow.Flow
-import retrofit2.Response
 
 interface BookRepository {
     val domesticList: ArrayList<String>
@@ -15,7 +12,7 @@ interface BookRepository {
     val dvdList: ArrayList<String>
 
     // 선택한 카테고리의 베스트셀러 서버에서 가져옴
-    suspend fun getBestSellerResult(categoryId: String): Flow<BestSellerResult>
+    suspend fun getBestSellerResult(categoryId: String): Flow<BestSellerResponse>
 
     // 선택한 카테고리 id로 카테고리 이름 가져옴 ex) id = 101, name = 국내도서>소설
     suspend fun getBestSellersCategory(categoryId: String) : Flow<List<String>>

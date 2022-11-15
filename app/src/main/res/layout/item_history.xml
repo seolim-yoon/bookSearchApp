@@ -3,7 +3,7 @@
     <data>
         <variable
             name="history"
-            type="com.example.booksearchapp.data.database.model.HistoryModel" />
+            type="com.example.booksearchapp.model.database.dto.HistoryModel" />
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"

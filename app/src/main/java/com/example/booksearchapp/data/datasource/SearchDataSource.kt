@@ -1,13 +1,13 @@
 package com.example.booksearchapp.data.datasource
 
-import com.example.booksearchapp.data.database.model.HistoryModel
-import com.example.booksearchapp.data.response.SearchResult
+import com.example.booksearchapp.model.database.dto.HistoryModel
+import com.example.booksearchapp.model.network.response.SearchResponse
 import kotlinx.coroutines.flow.Flow
 import retrofit2.Response
 
 interface SearchDataSource {
     // 검색 키워드로 검색한 결과를 서버에서 가져옴
-    suspend fun searchBooksByName(keyword: String, page: Int) : Response<SearchResult>
+    suspend fun searchBooksByName(keyword: String, page: Int) : Response<SearchResponse>
 
     // 저장된 검색 기록을 Room DB에서 가져옴
     suspend fun getAllHistory() : Flow<List<HistoryModel>>

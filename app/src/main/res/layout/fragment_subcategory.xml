@@ -3,7 +3,7 @@
     <data>
         <variable
             name="viewmodel"
-            type="com.example.booksearchapp.ui.viewmodel.BookViewModel" />
+            type="com.example.booksearchapp.feature.book.BookViewModel" />
         <import type="android.view.View"/>
         <import type="com.example.booksearchapp.util.Category"/>
     </data>

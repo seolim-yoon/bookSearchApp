@@ -2,9 +2,8 @@ package com.example.booksearchapp.data.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.example.booksearchapp.data.database.model.BaseModel
-import com.example.booksearchapp.data.database.model.SearchModel
-import com.example.booksearchapp.data.response.mapper.SearchMapper
+import com.example.booksearchapp.model.database.dto.BaseModel
+import com.example.booksearchapp.model.network.response.mapper.SearchMapper
 import com.example.booksearchapp.repository.SearchRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

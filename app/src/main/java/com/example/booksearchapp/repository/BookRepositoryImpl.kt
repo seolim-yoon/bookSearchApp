@@ -1,12 +1,10 @@
 package com.example.booksearchapp.repository
 
 import androidx.paging.PagingSource
-import com.example.booksearchapp.data.database.model.BestSellerModel
+import com.example.booksearchapp.model.database.dto.BestSellerModel
 import com.example.booksearchapp.data.datasource.BookDataSource
-import com.example.booksearchapp.data.response.BestSellerResult
-import com.example.booksearchapp.data.response.mapper.BestSellerMapper
+import com.example.booksearchapp.model.network.response.BestSellerResponse
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class BookRepositoryImpl @Inject constructor(private val bookDataSource: BookDataSource): BookRepository {
@@ -15,7 +13,7 @@ class BookRepositoryImpl @Inject constructor(private val bookDataSource: BookDat
     override val recordList = arrayListOf("ALL", "가요", "Pop", "Rock", "J.POP", "월드뮤직", "Jazz", "클래식", "국악", "뉴에이지", "O.S.T")
     override val dvdList = arrayListOf("ALL", "애니메이션", "영화", "블루레이", "유아동/교육 DVD", "", "", "", "", "", "")
 
-    override suspend fun getBestSellerResult(categoryId: String): Flow<BestSellerResult> = bookDataSource.getBestSellerResult(categoryId)
+    override suspend fun getBestSellerResult(categoryId: String): Flow<BestSellerResponse> = bookDataSource.getBestSellerResult(categoryId)
 
     override suspend fun getBestSellersCategory(categoryId: String) : Flow<List<String>> = bookDataSource.getBestSellersCategory(categoryId)
 

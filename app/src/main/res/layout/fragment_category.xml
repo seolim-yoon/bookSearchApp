@@ -4,7 +4,7 @@
         <import type="com.example.booksearchapp.util.Category"/>
         <variable
             name="viewmodel"
-            type="com.example.booksearchapp.ui.viewmodel.BookViewModel" />
+            type="com.example.booksearchapp.feature.book.BookViewModel" />
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"

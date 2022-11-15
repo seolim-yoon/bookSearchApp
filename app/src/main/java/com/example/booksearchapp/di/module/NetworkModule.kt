@@ -1,6 +1,6 @@
 package com.example.booksearchapp.di.module
 
-import com.example.booksearchapp.data.BookService
+import com.example.booksearchapp.model.network.api.BookServiceApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -38,5 +38,5 @@ object NetworkModule {
         .build()
 
     @Provides
-    fun provideBookSearchApi(retrofit: Retrofit): BookService = retrofit.create(BookService::class.java)
+    fun provideBookSearchApi(retrofit: Retrofit): BookServiceApi = retrofit.create(BookServiceApi::class.java)
 }

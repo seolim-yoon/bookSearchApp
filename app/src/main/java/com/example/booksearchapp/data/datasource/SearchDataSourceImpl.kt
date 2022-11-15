@@ -1,18 +1,18 @@
 package com.example.booksearchapp.data.datasource
 
 import com.example.booksearchapp.base.BaseDataSource
-import com.example.booksearchapp.data.BookService
-import com.example.booksearchapp.data.database.dao.HistoryDao
-import com.example.booksearchapp.data.database.model.HistoryModel
-import com.example.booksearchapp.data.response.SearchResult
+import com.example.booksearchapp.model.network.api.BookServiceApi
+import com.example.booksearchapp.model.database.dao.HistoryDao
+import com.example.booksearchapp.model.database.dto.HistoryModel
+import com.example.booksearchapp.model.network.response.SearchResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import retrofit2.Response
 import javax.inject.Inject
 
-class SearchDataSourceImpl @Inject constructor(private val historyDao: HistoryDao, private val bookService: BookService): SearchDataSource, BaseDataSource() {
+class SearchDataSourceImpl @Inject constructor(private val historyDao: HistoryDao, private val bookService: BookServiceApi): SearchDataSource, BaseDataSource() {
 
-    override suspend fun searchBooksByName(keyword: String, page: Int) : Response<SearchResult> = bookService.searchBooksByName(key, keyword, page)
+    override suspend fun searchBooksByName(keyword: String, page: Int) : Response<SearchResponse> = bookService.searchBooksByName(key, keyword, page)
 
     override suspend fun getAllHistory() : Flow<List<HistoryModel>> = flow {
         emit(historyDao.getAllHistory())

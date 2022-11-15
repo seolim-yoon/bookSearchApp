@@ -2,9 +2,9 @@ package com.example.booksearchapp.di.module
 
 import android.content.Context
 import androidx.room.Room
-import com.example.booksearchapp.data.database.AppDatabase
-import com.example.booksearchapp.data.database.dao.BookDao
-import com.example.booksearchapp.data.database.dao.HistoryDao
+import com.example.booksearchapp.model.database.AppDatabase
+import com.example.booksearchapp.model.database.dao.BookDao
+import com.example.booksearchapp.model.database.dao.HistoryDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

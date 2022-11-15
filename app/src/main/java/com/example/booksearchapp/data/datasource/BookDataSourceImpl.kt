@@ -2,16 +2,16 @@ package com.example.booksearchapp.data.datasource
 
 import androidx.paging.PagingSource
 import com.example.booksearchapp.base.BaseDataSource
-import com.example.booksearchapp.data.BookService
-import com.example.booksearchapp.data.database.dao.BookDao
-import com.example.booksearchapp.data.database.model.BestSellerModel
-import com.example.booksearchapp.data.response.BestSellerResult
+import com.example.booksearchapp.model.network.api.BookServiceApi
+import com.example.booksearchapp.model.database.dao.BookDao
+import com.example.booksearchapp.model.database.dto.BestSellerModel
+import com.example.booksearchapp.model.network.response.BestSellerResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
-class BookDataSourceImpl @Inject constructor(private val bookDao: BookDao, private val bookService: BookService): BookDataSource, BaseDataSource() {
-    override suspend fun getBestSellerResult(categoryId: String): Flow<BestSellerResult> = flow {
+class BookDataSourceImpl @Inject constructor(private val bookDao: BookDao, private val bookService: BookServiceApi): BookDataSource, BaseDataSource() {
+    override suspend fun getBestSellerResult(categoryId: String): Flow<BestSellerResponse> = flow {
         emit(bookService.getBestSellerBooks(key, categoryId))
     }
 
