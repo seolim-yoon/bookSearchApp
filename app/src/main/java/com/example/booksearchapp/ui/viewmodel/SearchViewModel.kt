@@ -1,6 +1,5 @@
 package com.example.booksearchapp.ui.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -10,14 +9,14 @@ import androidx.paging.cachedIn
 import com.example.booksearchapp.base.BaseViewModel
 import com.example.booksearchapp.data.database.model.HistoryModel
 import com.example.booksearchapp.data.paging.SearchBookPagingSource
-import com.example.booksearchapp.repository.SearchRepositoryImpl
+import com.example.booksearchapp.repository.SearchRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SearchViewModel @Inject constructor(private val searchRepositoryImpl: SearchRepositoryImpl) : BaseViewModel() {
+class SearchViewModel @Inject constructor(private val searchRepository: SearchRepository) : BaseViewModel() {
     private var keyword = ""
 
     private val _searchKeywordLiveData = MutableLiveData<String>()
@@ -34,7 +33,7 @@ class SearchViewModel @Inject constructor(private val searchRepositoryImpl: Sear
 
     // Search Book 리스트 Pager
     val searchPager = Pager(PagingConfig(pageSize = 10)) {
-        SearchBookPagingSource(searchRepositoryImpl, keyword)
+        SearchBookPagingSource(searchRepository, keyword)
     }.flow.cachedIn(viewModelScope)
 
     init {
@@ -49,36 +48,23 @@ class SearchViewModel @Inject constructor(private val searchRepositoryImpl: Sear
     }
 
     fun getAllHistory() {
-        addDisposable(
-            searchRepositoryImpl.getAllHistory()
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe { historys ->
-                            _historyListLiveData.value = historys.reversed()
-                        }
-        )
+        viewModelScope.launch {
+            searchRepository.getAllHistory().collectLatest { history ->
+                _historyListLiveData.value = history.reversed()
+            }
+        }
     }
 
     private fun insertHistory(historyModel: HistoryModel) {
-        addDisposable(
-            searchRepositoryImpl.insertHistory(historyModel)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe {
-
-                        }
-        )
+        viewModelScope.launch {
+            searchRepository.insertHistory(historyModel)
+        }
     }
 
     fun deleteHistory(keyword: String) {
-        addDisposable(
-            searchRepositoryImpl.deleteHistory(keyword)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe {
-                            getAllHistory()
-                        }
-        )
+        viewModelScope.launch {
+            searchRepository.deleteHistory(keyword)
+        }
     }
 
     fun changeIsShowHistory(isShowHistory: Boolean) {

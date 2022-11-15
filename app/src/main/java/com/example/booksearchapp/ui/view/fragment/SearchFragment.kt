@@ -2,7 +2,6 @@ package com.example.booksearchapp.ui.view.fragment
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.View

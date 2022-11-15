@@ -7,15 +7,17 @@ import androidx.room.Query
 import com.example.booksearchapp.data.database.model.HistoryModel
 import io.reactivex.Completable
 import io.reactivex.Single
+import kotlinx.coroutines.flow.Flow
+import retrofit2.Response
 
 @Dao
 interface HistoryDao {
     @Query("SELECT * FROM History")
-    fun getAllHistory(): Single<List<HistoryModel>>
+    suspend fun getAllHistory(): List<HistoryModel>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertHistory(history: HistoryModel): Completable
+    suspend fun insertHistory(history: HistoryModel)
 
     @Query("DELETE FROM History WHERE keyword = :keyword")
-    fun deleteHistory(keyword: String): Completable
+    suspend fun deleteHistory(keyword: String)
 }

@@ -1,34 +1,44 @@
 package com.example.booksearchapp.data.paging
 
-import android.util.Log
+import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import androidx.paging.rxjava2.RxPagingSource
 import com.example.booksearchapp.data.database.model.BaseModel
 import com.example.booksearchapp.data.response.mapper.SearchMapper
 import com.example.booksearchapp.repository.SearchRepository
-import io.reactivex.Single
-import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import retrofit2.HttpException
+import java.io.IOException
 
 class SearchBookPagingSource(
     private val repository: SearchRepository,
     private val keyword: String
-) : RxPagingSource<Int, BaseModel>() {
+) : PagingSource<Int, BaseModel>() {
     override fun getRefreshKey(state: PagingState<Int, BaseModel>): Int? = null
 
-    override fun loadSingle(params: LoadParams<Int>): Single<LoadResult<Int, BaseModel>> {
-        val nextPage: Int = params.key ?: 1
-        return repository.searchBooksByName(keyword, nextPage)
-            .subscribeOn(Schedulers.io())
-            .map<LoadResult<Int, BaseModel>> { result ->
-                LoadResult.Page(
-                    data = SearchMapper().map(result),
-                    prevKey = null,
-                    nextKey = if(keyword == "") null else nextPage + 1
-                )
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, BaseModel> {
+        return try {
+            val nextPage: Int = params.key ?: 1
+
+            val response = withContext(Dispatchers.IO) {
+                repository.searchBooksByName(keyword, nextPage)
             }
-            .onErrorReturn { e ->
-                Log.e("seolim", "error : " + e.message)
-                LoadResult.Error(e)
-            }
+
+            val bookList = SearchMapper().map(response.body())
+
+            val prevKey = null
+            val nextKey = if(keyword == "") null else nextPage + 1
+
+            LoadResult.Page(
+                data = bookList ?: listOf(),
+                prevKey = prevKey,
+                nextKey = nextKey
+            )
+
+        } catch (exception: IOException) {
+            return LoadResult.Error(exception)
+        } catch (exception: HttpException) {
+            return LoadResult.Error(exception)
+        }
     }
 }

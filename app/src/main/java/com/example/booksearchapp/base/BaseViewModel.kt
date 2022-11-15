@@ -7,21 +7,10 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 
 open class BaseViewModel: ViewModel() {
-    private val compositeDisposable = CompositeDisposable()
 
     private val _isVisibleLoadingLiveData = MutableLiveData<Boolean>()
     val isVisibleLoadingLiveData: LiveData<Boolean>
         get() = _isVisibleLoadingLiveData
-
-
-    fun addDisposable(disposable: Disposable) {
-        compositeDisposable.add(disposable)
-    }
-
-    override fun onCleared() {
-        compositeDisposable.clear()
-        super.onCleared()
-    }
 
     open fun showLoadingAnimation() {
         _isVisibleLoadingLiveData.postValue(true)

@@ -1,21 +1,19 @@
 package com.example.booksearchapp.repository
 
-import com.example.booksearchapp.base.BaseRepository
-import com.example.booksearchapp.data.BookService
-import com.example.booksearchapp.data.database.dao.HistoryDao
 import com.example.booksearchapp.data.database.model.HistoryModel
+import com.example.booksearchapp.data.datasource.SearchDataSource
 import com.example.booksearchapp.data.response.SearchResult
-import io.reactivex.Completable
-import io.reactivex.Single
+import kotlinx.coroutines.flow.Flow
+import retrofit2.Response
 import javax.inject.Inject
 
-class SearchRepositoryImpl @Inject constructor(private val historyDao: HistoryDao, private val bookService: BookService): SearchRepository, BaseRepository() {
+class SearchRepositoryImpl @Inject constructor(private val searchDataSource: SearchDataSource): SearchRepository {
 
-    override fun searchBooksByName(keyword: String, page: Int) : Single<SearchResult> = bookService.searchBooksByName(key, keyword, page)
+    override suspend fun searchBooksByName(keyword: String, page: Int) : Response<SearchResult> = searchDataSource.searchBooksByName(keyword, page)
 
-    override fun getAllHistory() : Single<List<HistoryModel>> = historyDao.getAllHistory()
+    override suspend fun getAllHistory() : Flow<List<HistoryModel>> = searchDataSource.getAllHistory()
 
-    override fun insertHistory(history: HistoryModel) : Completable = historyDao.insertHistory(history)
+    override suspend fun insertHistory(history: HistoryModel) = searchDataSource.insertHistory(history)
 
-    override fun deleteHistory(keyword: String) : Completable = historyDao.deleteHistory(keyword)
+    override suspend fun deleteHistory(keyword: String) = searchDataSource.deleteHistory(keyword)
 }

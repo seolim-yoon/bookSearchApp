@@ -8,6 +8,8 @@ import androidx.room.Query
 import com.example.booksearchapp.data.database.model.BestSellerModel
 import io.reactivex.Completable
 import io.reactivex.Single
+import kotlinx.coroutines.flow.Flow
+import retrofit2.Response
 
 @Dao
 interface BookDao {
@@ -15,8 +17,8 @@ interface BookDao {
     fun getAllBestSellersByCategory(categoryId: String): PagingSource<Int, BestSellerModel>
 
     @Query("SELECT categoryName FROM BestSeller WHERE categoryId LIKE :categoryId")
-    fun getBestSellersCategory(categoryId: String): Single<List<String>>
+    suspend fun getBestSellersCategory(categoryId: String): List<String>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAllBestSeller(bestSellerModels: List<BestSellerModel>) : Completable
+    suspend fun insertAllBestSeller(bestSellerModels: List<BestSellerModel>)
 }

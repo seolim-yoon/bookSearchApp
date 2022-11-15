@@ -1,11 +1,11 @@
-package com.example.booksearchapp.repository
+package com.example.booksearchapp.data.datasource
 
 import com.example.booksearchapp.data.database.model.HistoryModel
 import com.example.booksearchapp.data.response.SearchResult
 import kotlinx.coroutines.flow.Flow
 import retrofit2.Response
 
-interface SearchRepository {
+interface SearchDataSource {
     // 검색 키워드로 검색한 결과를 서버에서 가져옴
     suspend fun searchBooksByName(keyword: String, page: Int) : Response<SearchResult>
 
