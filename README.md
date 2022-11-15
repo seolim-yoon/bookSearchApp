@@ -21,6 +21,7 @@
   + Open API(Interpark) 사용 ( http://book.interpark.com/blog/bookpinion/bookpinionOpenAPIInfo.rdo)
   + Glide
   + Hilt
+  + Coroutine (Flow)
 
 * 프로젝트 구조
 
