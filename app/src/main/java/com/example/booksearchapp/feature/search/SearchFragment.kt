@@ -9,7 +9,10 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.example.booksearchapp.R
 import com.example.booksearchapp.base.BaseFragment
 import com.example.booksearchapp.databinding.FragmentSearchBinding
@@ -82,13 +85,20 @@ class SearchFragment : BaseFragment<FragmentSearchBinding, SearchViewModel>() {
     private fun initObserver() {
         with(viewModel) {
             // history insert/delete 후 리스트 변경될 때 마다 history 리스트 갱신
-            historyListLiveData.observe(viewLifecycleOwner) { keywords ->
-                historyAdapter.submitList(keywords.orEmpty())
+            lifecycleScope.launch {
+                repeatOnLifecycle(Lifecycle.State.STARTED) {
+                    historyList.collectLatest { keywords ->
+                        historyAdapter.submitList(keywords.orEmpty())
+                    }
+                }
             }
 
             // 검색 후 Search 버튼 누르면 book 리스트 새로고침
-            searchKeywordLiveData.observe(viewLifecycleOwner) { keyword ->
-                searchBookAdapter.refresh()
+            lifecycleScope.launch {
+                searchKeyword.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
+                    .collect { keyword ->
+                        searchBookAdapter.refresh()
+                    }
             }
 
             lifecycleScope.launch {

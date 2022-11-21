@@ -12,9 +12,6 @@ interface BookDao {
     @Query("SELECT * FROM BestSeller WHERE categoryId LIKE :categoryId ORDER BY rank ASC")
     fun getAllBestSellersByCategory(categoryId: String): PagingSource<Int, BestSellerModel>
 
-    @Query("SELECT categoryName FROM BestSeller WHERE categoryId LIKE :categoryId")
-    suspend fun getBestSellersCategory(categoryId: String): List<String>
-
     @Query("SELECT * FROM BestSeller WHERE rank LIKE :rank + 1")
     suspend fun getSelectBestSeller(rank: Int): BestSellerModel
 

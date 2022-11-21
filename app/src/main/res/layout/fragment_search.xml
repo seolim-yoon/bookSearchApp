@@ -87,7 +87,7 @@
             app:layout_constraintTop_toBottomOf="@id/et_book_search_title"
             app:layout_constraintStart_toStartOf="@id/et_book_search_title"
             app:layout_constraintEnd_toEndOf="@id/et_book_search_title"
-            android:visibility="@{viewmodel.isShowHistoryLiveData ? View.VISIBLE : View.GONE}"/>
+            android:visibility="@{viewmodel.isShowHistory ? View.VISIBLE : View.GONE}"/>
 
         <ProgressBar
             android:id="@+id/pb_loading"

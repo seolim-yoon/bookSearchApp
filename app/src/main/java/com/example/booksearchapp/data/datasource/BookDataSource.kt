@@ -8,11 +8,9 @@ import kotlinx.coroutines.flow.Flow
 interface BookDataSource {
     suspend fun getBestSellerResult(categoryId: String): Flow<BestSellerResponse>
 
-    suspend fun getBestSellersCategory(categoryId: String): Flow<List<String>>
-
     suspend fun getSelectBestSeller(rank: Int): Flow<BestSellerModel>
 
-    suspend fun insertAllBestSeller(bestSellerModels: List<BestSellerModel>): Flow<Unit>
+    suspend fun insertAllBestSeller(bestSellerModels: List<BestSellerModel>)
 
     fun getAllBestSellersByCategory(categoryId: String): PagingSource<Int, BestSellerModel>
 }

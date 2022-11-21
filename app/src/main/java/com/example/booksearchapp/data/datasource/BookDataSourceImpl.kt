@@ -15,17 +15,11 @@ class BookDataSourceImpl @Inject constructor(private val bookDao: BookDao, priva
         emit(bookService.getBestSellerBooks(key, categoryId))
     }
 
-    override suspend fun getBestSellersCategory(categoryId: String) : Flow<List<String>> = flow {
-        emit(bookDao.getBestSellersCategory(categoryId))
-    }
-
     override suspend fun getSelectBestSeller(rank: Int): Flow<BestSellerModel> = flow {
         emit(bookDao.getSelectBestSeller(rank))
     }
 
-    override suspend fun insertAllBestSeller(bestSellerModels: List<BestSellerModel>): Flow<Unit> = flow {
-        emit(bookDao.insertAllBestSeller(bestSellerModels))
-    }
+    override suspend fun insertAllBestSeller(bestSellerModels: List<BestSellerModel>) = bookDao.insertAllBestSeller(bestSellerModels)
 
     override fun getAllBestSellersByCategory(categoryId: String) : PagingSource<Int, BestSellerModel> = bookDao.getAllBestSellersByCategory(categoryId)
 }

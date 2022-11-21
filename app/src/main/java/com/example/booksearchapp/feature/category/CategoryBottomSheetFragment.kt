@@ -7,6 +7,9 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import com.example.booksearchapp.R
 import com.example.booksearchapp.databinding.LayoutCategoryBottomSheetBinding
 import com.example.booksearchapp.feature.book.BookViewModel
@@ -14,6 +17,8 @@ import com.example.booksearchapp.util.StateResult
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class CategoryBottomSheetFragment() : BottomSheetDialogFragment() {
@@ -46,11 +51,14 @@ class CategoryBottomSheetFragment() : BottomSheetDialogFragment() {
         }.attach()
 
         // OK 버튼 누르면 다이얼로그 dismiss
-        viewModel.dialogStateLiveData.observe(viewLifecycleOwner) { result ->
-            if(result == StateResult.OK) {
-                viewModel.changeDialogState(StateResult.NONE)
-                dismiss()
-            }
+        lifecycleScope.launch {
+            viewModel.dialogState.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
+                .collect { result ->
+                    if(result == StateResult.OK) {
+                        viewModel.changeDialogState(StateResult.NONE)
+                        dismiss()
+                    }
+                }
         }
     }
 
